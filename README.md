@@ -30,7 +30,7 @@
 
    (3) 建立 readme
 
-[Rmarkdown](https://kevinhuang102888.github.io/kevinhuang/week1/demo.html)
+3. [Rmarkdown](https://kevinhuang102888.github.io/kevinhuang/week1/demo.html)
 
 ## Week 2
 
