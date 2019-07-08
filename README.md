@@ -32,9 +32,9 @@
 
 3. R的學習
 
-	R / Rstudio / RMD
+	R / Rstudio / RMD 
 	
-	[Rmarkdown](https://kevinhuang102888.github.io/kevinhuang/week1/demo.html)
+	實作：[Rmarkdown](https://kevinhuang102888.github.io/kevinhuang/week1/demo.html)
 
 ## Week 2
 
