@@ -20,6 +20,8 @@
 
 ## Week 1
 
+[Rmarkdown](https://kevinhuang102888.github.io/kevinhuang/week1/demo.html)
+
 ## Week 2
 
 ## Week 3
