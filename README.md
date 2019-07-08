@@ -30,7 +30,11 @@
 
    (3) 建立 readme
 
-3. R [Rmarkdown](https://kevinhuang102888.github.io/kevinhuang/week1/demo.html)
+3. R的學習
+
+	R / Rstudio / RMD
+	
+	[Rmarkdown](https://kevinhuang102888.github.io/kevinhuang/week1/demo.html)
 
 ## Week 2
 
