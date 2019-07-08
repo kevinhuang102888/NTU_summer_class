@@ -20,6 +20,16 @@
 
 ## Week 1
 
+1. 本課程介紹
+
+2. Github建立
+   
+   (1) create a Github account
+
+   (2) set up Github Desktop
+
+   (3) 建立 readme
+
 [Rmarkdown](https://kevinhuang102888.github.io/kevinhuang/week1/demo.html)
 
 ## Week 2
