@@ -407,133 +407,79 @@ library(dplyr)</code></pre>
 <p>2.取出需要的資料CSV，並調整fileEncoding為“UTF-8-BOM”，以防亂碼</p>
 <pre class="r"><code>#load the data
 survey &lt;- read.csv(&quot;105data.csv&quot;,header=TRUE,fileEncoding=&quot;UTF-8-BOM&quot;)
-head(survey)</code></pre>
+head(survey,3)</code></pre>
 <pre><code>##   v1 v13 v12 v2_1 v3_1 v3_2 v3_2_1  v4A v4B v5_1 v5_2 v5_3 v5_4 v5_5 v5_6
 ## 1  1   8   2 1126    1    2     NA 1126  NA   13   14   15   NA   NA   NA
 ## 2  1   8   1  612   98   NA     NA   NA  NA   14   NA   NA   NA   NA   NA
 ## 3  1   5   2 2209    1    2     NA 2206  NA   14   NA   NA   NA   NA   NA
-## 4  1   8   1 1707   98   NA     NA   NA  NA    2   NA   NA   NA   NA   NA
-## 5  1   8   2  903    1    2     NA  903  NA   14   NA   NA   NA   NA   NA
-## 6  1   6   1  708    1    1      2  708  NA   14   NA   NA   NA   NA   NA
 ##   v5_7 v5_8 v5_9 v5_10 v6 v7 v9_1A v9_1B v9_1C v9_1D v9_1E v9_1F v9_1G
 ## 1   NA   NA   NA    NA 15  1     6    57    78     7    NA    NA    NA
 ## 2   NA   NA   NA    NA 14  2    NA    NA    NA    NA    NA    NA    NA
 ## 3   NA   NA   NA    NA 14  1    81     6     7    NA    NA    NA    NA
-## 4   NA   NA   NA    NA  2  2    NA    NA    NA    NA    NA    NA    NA
-## 5   NA   NA   NA    NA 14  2    NA    NA    NA    NA    NA    NA    NA
-## 6   NA   NA   NA    NA 14  1     6    32    34    57    78    32    34
 ##   v9_1H v9_1I v9_1J v9_2XY v9_2AY v9_2BY v9_2CY v9_2DY v9_2EY v9_2FY
 ## 1    NA    NA    NA     11     11     11     11     11     NA     NA
 ## 2    NA    NA    NA     NA     NA     NA     NA     NA     NA     NA
 ## 3    NA    NA    NA      0      0      0      0     NA     NA     NA
-## 4    NA    NA    NA     NA     NA     NA     NA     NA     NA     NA
-## 5    NA    NA    NA     NA     NA     NA     NA     NA     NA     NA
-## 6     7    43    49      7      7      7      7      7      7      7
 ##   v9_2GY v9_2HY v9_2IY v9_2JY v9_2X v9_2A v9_2B v9_2C v9_2D v9_2E v9_2F
 ## 1     NA     NA     NA     NA  1126  1126  1126  1126  1126    NA    NA
 ## 2     NA     NA     NA     NA    NA    NA    NA    NA    NA    NA    NA
 ## 3     NA     NA     NA     NA  2209  2206  2206  2209    NA    NA    NA
-## 4     NA     NA     NA     NA    NA    NA    NA    NA    NA    NA    NA
-## 5     NA     NA     NA     NA    NA    NA    NA    NA    NA    NA    NA
-## 6      7      7      7      7   708   708   703   708   708   708   703
 ##   v9_2G v9_2H v9_2I v9_2J v9_2XX v9_2AX v9_2BX v9_2CX v9_2DX v9_2EX v9_2FX
 ## 1    NA    NA    NA    NA      1      1      1      1      1     NA     NA
 ## 2    NA    NA    NA    NA     NA     NA     NA     NA     NA     NA     NA
 ## 3    NA    NA    NA    NA      1      2      1      2     NA     NA     NA
-## 4    NA    NA    NA    NA     NA     NA     NA     NA     NA     NA     NA
-## 5    NA    NA    NA    NA     NA     NA     NA     NA     NA     NA     NA
-## 6   708   708   708   708      1      1      2      2      1      1      2
 ##   v9_2GX v9_2HX v9_2IX v9_2JX v9_3A1 v9_3A2 v9_3A3 v9_3A4 v9_3A5 v9_3B1
 ## 1     NA     NA     NA     NA     15     NA     NA     NA     NA     15
 ## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ## 3     NA     NA     NA     NA     14     NA     NA     NA     NA     14
-## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 6      2      1      1      1     14     NA     NA     NA     NA     15
 ##   v9_3B2 v9_3B3 v9_3B4 v9_3B5 v9_3C1 v9_3C2 v9_3C3 v9_3C4 v9_3C5 v9_3D1
 ## 1     NA     NA     NA     NA     15     NA     NA     NA     NA     15
 ## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ## 3     NA     NA     NA     NA     14     NA     NA     NA     NA     NA
-## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 6     NA     NA     NA     NA     15     NA     NA     NA     NA     14
 ##   v9_3D2 v9_3D3 v9_3D4 v9_3D5 v9_3E1 v9_3E2 v9_3E3 v9_3E4 v9_3E5 v9_3F1
 ## 1     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ## 3     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 6     NA     NA     NA     NA     14     NA     NA     NA     NA     15
 ##   v9_3F2 v9_3F3 v9_3F4 v9_3F5 v9_3G1 v9_3G2 v9_3G3 v9_3G4 v9_3G5 v9_3H1
 ## 1     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ## 3     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 6     NA     NA     NA     NA     15     NA     NA     NA     NA     14
 ##   v9_3H2 v9_3H3 v9_3H4 v9_3H5 v9_3I1 v9_3I2 v9_3I3 v9_3I4 v9_3I5 v9_3J1
 ## 1     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ## 3     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 6     NA     NA     NA     NA     14     NA     NA     NA     NA     14
 ##   v9_3J2 v9_3J3 v9_3J4 v9_3J5 v9_4A1 v9_4A2 v9_4A3 v9_4A4 v9_4A5 v9_4B1
 ## 1     NA     NA     NA     NA      5     NA     NA     NA     NA      5
 ## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ## 3     NA     NA     NA     NA     15     NA     NA     NA     NA     10
-## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 6     NA     NA     NA     NA      8     NA     NA     NA     NA     50
 ##   v9_4B2 v9_4B3 v9_4B4 v9_4B5 v9_4C1 v9_4C2 v9_4C3 v9_4C4 v9_4C5 v9_4D1
 ## 1     NA     NA     NA     NA      5     NA     NA     NA     NA      5
 ## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ## 3     NA     NA     NA     NA     25     NA     NA     NA     NA     NA
-## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 6     NA     NA     NA     NA     50     NA     NA     NA     NA      8
 ##   v9_4D2 v9_4D3 v9_4D4 v9_4D5 v9_4E1 v9_4E2 v9_4E3 v9_4E4 v9_4E5 v9_4F1
 ## 1     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ## 3     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 6     NA     NA     NA     NA      8     NA     NA     NA     NA     50
 ##   v9_4F2 v9_4F3 v9_4F4 v9_4F5 v9_4G1 v9_4G2 v9_4G3 v9_4G4 v9_4G5 v9_4H1
 ## 1     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ## 3     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 6     NA     NA     NA     NA     50     NA     NA     NA     NA      8
 ##   v9_4H2 v9_4H3 v9_4H4 v9_4H5 v9_4I1 v9_4I2 v9_4I3 v9_4I4 v9_4I5 v9_4J1
 ## 1     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ## 3     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 6     NA     NA     NA     NA      3     NA     NA     NA     NA      3
 ##   v9_4J2 v9_4J3 v9_4J4 v9_4J5 v10_01 v10_02 v10_03 v10_04 v10_05 v10_06
 ## 1     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ## 3     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
-## 6     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
 ##   v10_07 v10_08 v10_09 v10_10 v10_11 v10_31 v10_32 v10_33 v11_1 v11_2
 ## 1     NA     NA     NA     NA     NA     NA     NA     NA     7    NA
 ## 2     NA     NA     NA     NA     NA     NA     NA     NA    NA    NA
 ## 3     NA     NA     NA     NA     NA     NA     NA     NA     1    15
-## 4     NA     NA     NA     NA     NA     NA     NA     NA    NA    NA
-## 5     NA     NA     NA     NA     NA     NA     NA     NA    NA    NA
-## 6     NA     NA     NA     NA     NA     NA     NA     NA     1     6
 ##   v11_3 v11_4 v11_5 v14 v15 clas        w2        w3
 ## 1    NA    NA    NA   1   1    3 0.1912575 0.2039235
 ## 2    NA    NA    NA   4  10    1 0.7515268 1.2131282
-## 3     3    NA    NA   5   7    1 1.2699541 3.6111581
-## 4    NA    NA    NA   4  10    1 0.5840827 0.2382896
-## 5    NA    NA    NA   1   1    1 0.5225517 0.3673015
-## 6     7    NA    NA   3   7    1 0.8411799 1.1816600</code></pre>
+## 3     3    NA    NA   5   7    1 1.2699541 3.6111581</code></pre>
 <p>3.先初步對資料了解，針對「年齡」和「性別」計算總人數</p>
 <pre class="r"><code>#information about data(gender/age)
 survey2&lt;-survey
@@ -592,42 +538,141 @@ head(newdata)</code></pre>
 ## 4   8   1     1707              2         4  10
 ## 5   8   2      903             14         1   1
 ## 6   6   1      708             14         3   7</code></pre>
-<p>5.想要分析的問題</p>
-<p>*先將年齡分成三個階層，15到20歲、20到60歲以及60歲以上。</p>
-<p>Q1:各年齡層，計算每個縣市的使用大眾運輸百分率。</p>
+<p>5.將location(包括縣市+鄉里)分配成22個縣市</p>
+<pre class="r"><code>region&lt;-c(&#39;新北市&#39;,&#39;宜蘭縣&#39;,&#39;桃園縣&#39;,&#39;新竹縣&#39;,&#39;苗栗縣&#39;,
+          &#39;台中市&#39;,&#39;彰化縣&#39;,&#39;南投縣&#39;,&#39;雲林縣&#39;,&#39;嘉義縣&#39;,
+          &#39;台南市&#39;,&#39;高雄市&#39;,&#39;屏東縣&#39;,&#39;台東縣&#39;,&#39;花蓮縣&#39;,
+          &#39;澎湖縣&#39;,&#39;基隆市&#39;,&#39;新竹市&#39;,&#39;台中市&#39;,&#39;嘉義市&#39;,
+          &#39;台南市&#39;,&#39;台北市&#39;,&#39;高雄市&#39;,&#39;金門縣&#39;,&#39;連江縣&#39;)
+for (x in 1:25){
+  newdata$location[(as.numeric(newdata$location)%/%100)==x]&lt;-region[x]
+}
+head(newdata)</code></pre>
+<pre><code>##   age sex location transportation education job
+## 1   8   2   台南市             15         1   1
+## 2   8   1   台中市             14         4  10
+## 3   5   2   台北市             14         5   7
+## 4   8   1   基隆市              2         4  10
+## 5   8   2   雲林縣             14         1   1
+## 6   6   1   彰化縣             14         3   7</code></pre>
+<p>6.想要分析的問題</p>
+<p>Q1:先將年齡分成三個階層，15到20歲、20到60歲以及60歲以上。以各年齡層來說，計算每個縣市的使用大眾運輸百分率。</p>
+<p>設計兩個function，一個為找到特定年齡搭乘大眾運輸的資料，另一個是計算特定年齡搭乘大眾運輸除以該年齡層之人數的比率</p>
+<pre class="r"><code>#get certain part of data (15-20,20-60,60UP)
+certaindata&lt;-function(data,expression){
+  certain&lt;-data%&gt;%
+    select(age,location,transportation)%&gt;%
+    filter(expression&amp;transportation&gt;=14&amp;transportation&lt;=18)
+  certain
+}
+#get the rate about whether people commute by public transportation
+getrate&lt;-function(data,data2,expression){
+  total&lt;-data%&gt;%
+    select(age,location,transportation)%&gt;%
+    filter(expression)
+  h1&lt;-count(total,location)
+  h2&lt;-count(data2,location)
+  rate&lt;-data.frame(h1[1],1-h2[2]/h1[2])
+  rate
+}</code></pre>
+<p>套用function</p>
 <pre class="r"><code>#filter people who ages between 15-20 and between 20-60 and above 60
-youngadult&lt;-newdata%&gt;%
-  select(age,location)%&gt;%
-  filter(age==1|age==2)
-head(youngadult,3)</code></pre>
-<pre><code>##   age location
-## 1   1     1120
-## 2   1     1514
-## 3   1     1704</code></pre>
-<pre class="r"><code>adult&lt;-newdata%&gt;%
-  select(age,location)%&gt;%
-  filter(age&gt;=3&amp;age&lt;=6)
-head(adult,3)</code></pre>
-<pre><code>##   age location
-## 1   5     2209
-## 2   6      708
-## 3   5     1414</code></pre>
-<pre class="r"><code>elder&lt;-newdata%&gt;%
-  select(age,location)%&gt;%
-  filter(age&gt;=7)
-head(elder,3)</code></pre>
-<pre><code>##   age location
-## 1   8     1126
-## 2   8      612
-## 3   8     1707</code></pre>
+#age between 15 and 20
+expression1&lt;-newdata$age==1|newdata$age==2
+youngadult&lt;-certaindata(newdata,expression1)
+getrate(newdata,youngadult,expression1)</code></pre>
+<pre><code>##    location         n
+## 1    台中市 0.6556017
+## 2    台北市 0.8900000
+## 3    台東縣 0.5920000
+## 4    台南市 0.5760369
+## 5    宜蘭縣 0.6034483
+## 6    花蓮縣 0.5824176
+## 7    金門縣 0.7687075
+## 8    南投縣 0.6355140
+## 9    屏東縣 0.5312500
+## 10   苗栗縣 0.6357143
+## 11   桃園縣 0.6237624
+## 12   高雄市 0.6617647
+## 13   基隆市 0.7901235
+## 14   連江縣 0.7777778
+## 15   雲林縣 0.7024793
+## 16   新北市 0.7913043
+## 17   新竹市 0.5794393
+## 18   新竹縣 0.7118644
+## 19   嘉義市 0.5045045
+## 20   嘉義縣 0.6691176
+## 21   彰化縣 0.7130435
+## 22   澎湖縣 0.7179487</code></pre>
+<pre class="r"><code>#age between 20 and 60
+expression2&lt;-newdata$age&gt;=3&amp;newdata$age&lt;=6
+adult&lt;-certaindata(newdata,expression2)
+getrate(newdata,adult,expression2)</code></pre>
+<pre><code>##    location          n
+## 1    台中市 0.09888357
+## 2    台北市 0.56228172
+## 3    台東縣 0.08111380
+## 4    台南市 0.06724638
+## 5    宜蘭縣 0.10558252
+## 6    花蓮縣 0.10701546
+## 7    金門縣 0.14371981
+## 8    南投縣 0.10400867
+## 9    屏東縣 0.09292035
+## 10   苗栗縣 0.10520723
+## 11   桃園縣 0.15891892
+## 12   高雄市 0.09401709
+## 13   基隆市 0.35838150
+## 14   連江縣 0.27687296
+## 15   雲林縣 0.07821901
+## 16   新北市 0.35506520
+## 17   新竹市 0.08967083
+## 18   新竹縣 0.08559499
+## 19   嘉義市 0.06400000
+## 20   嘉義縣 0.08088235
+## 21   彰化縣 0.07117438
+## 22   澎湖縣 0.09236453</code></pre>
+<pre class="r"><code>#age above 60
+expression3&lt;-newdata$age&gt;=7
+elder&lt;-certaindata(newdata,expression3)
+getrate(newdata,elder,expression3)</code></pre>
+<pre><code>##    location         n
+## 1    台中市 0.3821990
+## 2    台北市 0.7561350
+## 3    台東縣 0.3310440
+## 4    台南市 0.3394428
+## 5    宜蘭縣 0.3862159
+## 6    花蓮縣 0.3454301
+## 7    金門縣 0.4841379
+## 8    南投縣 0.3629344
+## 9    屏東縣 0.3033854
+## 10   苗栗縣 0.3530962
+## 11   桃園縣 0.3709677
+## 12   高雄市 0.3750000
+## 13   基隆市 0.6033435
+## 14   連江縣 0.5666667
+## 15   雲林縣 0.3700787
+## 16   新北市 0.6243316
+## 17   新竹市 0.3483146
+## 18   新竹縣 0.3457792
+## 19   嘉義市 0.2893836
+## 20   嘉義縣 0.3582888
+## 21   彰化縣 0.3261589
+## 22   澎湖縣 0.4563233</code></pre>
 <p>Q2:「性別」是否會影響搭乘大眾運輸?</p>
 <pre class="r"><code>#determine the relationship between sex and transportation
 sex_VS_transport&lt;-select(newdata,sex,transportation)
-head(sex_VS_transport,3)</code></pre>
-<pre><code>##   sex transportation
-## 1   2             15
-## 2   1             14
-## 3   2             14</code></pre>
+head(sex_VS_transport,10)</code></pre>
+<pre><code>##    sex transportation
+## 1    2             15
+## 2    1             14
+## 3    2             14
+## 4    1              2
+## 5    2             14
+## 6    1             14
+## 7    1             15
+## 8    1             14
+## 9    1             14
+## 10   2             14</code></pre>
 </div>
 
 
