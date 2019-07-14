@@ -41,7 +41,7 @@ library(magrittr)
 
 ```{r} 
 #load the data
-survey <- read.csv("C:/Users/user/Desktop/105data.csv",header=TRUE,fileEncoding="UTF-8-BOM")
+survey <- read.csv("105data.csv",header=TRUE,fileEncoding="UTF-8-BOM")
 head(survey)
 ```
 
