@@ -1,0 +1,96 @@
+---
+title: "Transportation Analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### 概論
+
+為了環保節能與城市發展，政府積極推廣大眾運輸，大力興建捷運系統、重整公車系統或是規劃城市腳踏車系統，然而並非有了大眾運輸的出現，就能讓民眾從自駕車(汽車、機車)轉為大眾運輸，也應考慮到各個縣市的民眾對交通通勤的習慣、各縣市的大眾運輸建設或年齡層的不同等等因素，全方面的去討論，對於特定族群宣導，才能對症下藥。
+
+#### 資料介紹
+這份資料來自交通部的「交通部統計處民眾日常使用運具狀況調查」，主要資料調查紀錄為各縣市民眾平常日使用運具之情形、民眾未使用公共運輸工具之原因、民眾使用公共運輸工具之滿意度及不滿意的原因。
+
+本次分析主要採用目前最新的調查版本(105年度)，並希望可以調查出「各縣市年齡層使用大眾運輸的使用率百分比」以及「性別是否影響搭乘大眾運輸」的討論
+
+[資料來源](https://data.gov.tw/dataset/6248)
+
+#### code介紹
+
+1.先將需要的library匯入
+```r 
+#import 'dplyr' and 'magrittr'
+library(dplyr)
+library(magrittr)
+```
+2.取出需要的資料CSV，並調整fileEncoding為"UTF-8-BOM"，以防亂碼
+```r 
+#load the data
+survey <- read.csv("C:/Users/user/Desktop/105data.csv",header=TRUE,fileEncoding="UTF-8-BOM")
+head(survey)
+```
+3.先初步對資料了解，針對「年齡」和「性別」計算總人數
+```r 
+#information about data(gender/age)
+survey2<-survey
+survey2%>%
+  nrow()%>%
+  toString()%>%
+  paste('調查人數：',.,'人')%>%
+  print()
+#gender summary
+survey2$v12[survey2$v12==1]<-'male'
+survey2$v12[survey2$v12==2]<-'female'
+count(survey2,v12)
+#age summary
+survey2$v1[survey2$v1==1]<-'above15'
+survey2$v1[survey2$v1==2]<-'under15'
+survey2$v13[survey2$v13==1]<-'15-18'
+survey2$v13[survey2$v13==2]<-'18-20'
+survey2$v13[survey2$v13==3]<-'20-30'
+survey2$v13[survey2$v13==4]<-'30-40'
+survey2$v13[survey2$v13==5]<-'40-50'
+survey2$v13[survey2$v13==6]<-'50-60'
+survey2$v13[survey2$v13==7]<-'60-65'
+survey2$v13[survey2$v13==8]<-'above65'
+count(survey2,v1,name='人數')
+count(survey2,v13,name = '人數')
+```
+4.從資料取出「年齡」、「性別」、「居住地」、「平日主要使用的交通工具」、「教育」以及「工作類型」
+```r 
+#select the data which i want
+newdata<-survey %>%
+  select(age=v13,sex=v12,location=v2_1,transportation=v6,education=v14,job=v15)
+head(newdata)
+```
+5.想要分析的問題
+
+先將年齡分成三個階層，15到20歲、20到60歲以及60歲以上。
+
+Q1:各年齡層，計算每個縣市的使用大眾運輸百分率。
+```r 
+#filter people who ages between 15-20 and between 20-60 and above 60
+youngadult<-newdata%>%
+  select(age,location)%>%
+  filter(age==1|age==2)
+head(youngadult,3)
+
+adult<-newdata%>%
+  select(age,location)%>%
+  filter(age>=3&age<=6)
+head(adult,3)
+
+elder<-newdata%>%
+  select(age,location)%>%
+  filter(age>=7)
+head(elder,3)
+```
+Q2:「性別」是否會影響搭乘大眾運輸?
+```r 
+#determine the relationship between sex and transportation
+sex_VS_transport<-select(newdata,age,transportation)
+head(sex_VS_transport,3)
+```
