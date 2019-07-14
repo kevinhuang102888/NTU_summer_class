@@ -42,7 +42,7 @@ library(magrittr)
 ```{r} 
 #load the data
 survey <- read.csv("105data.csv",header=TRUE,fileEncoding="UTF-8-BOM")
-head(survey)
+head(survey,3)
 ```
 
 3.先初步對資料了解，針對「年齡」和「性別」計算總人數
@@ -83,28 +83,62 @@ newdata<-survey %>%
 head(newdata)
 ```
 
-5.想要分析的問題
+5.將location(包括縣市+鄉里)分配成22個縣市
 
-*先將年齡分成三個階層，15到20歲、20到60歲以及60歲以上。
+```{r warning=FALSE}
+region<-c('新北市','宜蘭縣','桃園縣','新竹縣','苗栗縣',
+          '台中市','彰化縣','南投縣','雲林縣','嘉義縣',
+          '台南市','高雄市','屏東縣','台東縣','花蓮縣',
+          '澎湖縣','基隆市','新竹市','台中市','嘉義市',
+          '台南市','台北市','高雄市','金門縣','連江縣')
+for (x in 1:25){
+  newdata$location[(as.numeric(newdata$location)%/%100)==x]<-region[x]
+}
+head(newdata)
+```
 
-Q1:各年齡層，計算每個縣市的使用大眾運輸百分率。
+6.想要分析的問題
 
+Q1:先將年齡分成三個階層，15到20歲、20到60歲以及60歲以上。以各年齡層來說，計算每個縣市的使用大眾運輸百分率。
+
+設計兩個function，一個為找到特定年齡搭乘大眾運輸的資料，另一個是計算特定年齡搭乘大眾運輸除以該年齡層之人數的比率
 ```{r} 
+#get certain part of data (15-20,20-60,60UP)
+certaindata<-function(data,expression){
+  certain<-data%>%
+    select(age,location,transportation)%>%
+    filter(expression&transportation>=14&transportation<=18)
+  certain
+}
+#get the rate about whether people commute by public transportation
+getrate<-function(data,data2,expression){
+  total<-data%>%
+    select(age,location,transportation)%>%
+    filter(expression)
+  h1<-count(total,location)
+  h2<-count(data2,location)
+  rate<-data.frame(h1[1],1-h2[2]/h1[2])
+  rate
+}
+```
+
+套用function
+```{r}
 #filter people who ages between 15-20 and between 20-60 and above 60
-youngadult<-newdata%>%
-  select(age,location)%>%
-  filter(age==1|age==2)
-head(youngadult,3)
+#age between 15 and 20
+expression1<-newdata$age==1|newdata$age==2
+youngadult<-certaindata(newdata,expression1)
+getrate(newdata,youngadult,expression1)
 
-adult<-newdata%>%
-  select(age,location)%>%
-  filter(age>=3&age<=6)
-head(adult,3)
+#age between 20 and 60
+expression2<-newdata$age>=3&newdata$age<=6
+adult<-certaindata(newdata,expression2)
+getrate(newdata,adult,expression2)
 
-elder<-newdata%>%
-  select(age,location)%>%
-  filter(age>=7)
-head(elder,3)
+#age above 60
+expression3<-newdata$age>=7
+elder<-certaindata(newdata,expression3)
+getrate(newdata,elder,expression3)
 ```
 
 Q2:「性別」是否會影響搭乘大眾運輸?
@@ -112,5 +146,5 @@ Q2:「性別」是否會影響搭乘大眾運輸?
 ```{r} 
 #determine the relationship between sex and transportation
 sex_VS_transport<-select(newdata,sex,transportation)
-head(sex_VS_transport,3)
+head(sex_VS_transport,10)
 ```
