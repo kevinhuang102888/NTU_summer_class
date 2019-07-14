@@ -34,7 +34,9 @@
 
 	R / Rstudio / RMD 
 	
-	實作：[Rmarkdown](https://kevinhuang102888.github.io/kevinhuang/week1/demo.html)
+	實作：[Rmarkdown](https://kevinhuang102888.github.io/kevinhuang/week1/class1-1/demo.html)
+
+4. 作業1 :[transportation analysis](https://github.com/kevinhuang102888/kevinhuang/week1/class1-2/transportation_analysis.html)
 
 ## Week 2
 
