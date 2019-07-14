@@ -6,15 +6,16 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-===
-#### 概論
-===
+## 概論
+---
+
+
 
 為了環保節能與城市發展，政府積極推廣大眾運輸，大力興建捷運系統、重整公車系統或是規劃城市腳踏車系統，然而並非有了大眾運輸的出現，就能讓民眾從自駕車(汽車、機車)轉為大眾運輸，也應考慮到各個縣市的民眾對交通通勤的習慣、各縣市的大眾運輸建設或年齡層的不同等等因素，全方面的去討論，對於特定族群宣導，才能對症下藥。
 
-===
-#### 資料介紹
-===
+
+## 資料介紹
+---
 
 這份資料來自交通部的「交通部統計處民眾日常使用運具狀況調查」，主要資料調查紀錄為各縣市民眾平常日使用運具之情形、民眾未使用公共運輸工具之原因、民眾使用公共運輸工具之滿意度及不滿意的原因。
 
@@ -22,24 +23,31 @@ knitr::opts_chunk$set(echo = TRUE)
 
 [資料來源](https://data.gov.tw/dataset/6248)
 
-===
-#### code介紹
-===
+
+
+## code介紹
+---
+
 
 1.先將需要的library匯入
-```r 
+
+```{r}
 #import 'dplyr' and 'magrittr'
 library(dplyr)
 library(magrittr)
 ```
+
 2.取出需要的資料CSV，並調整fileEncoding為"UTF-8-BOM"，以防亂碼
-```r 
+
+```{r} 
 #load the data
 survey <- read.csv("C:/Users/user/Desktop/105data.csv",header=TRUE,fileEncoding="UTF-8-BOM")
 head(survey)
 ```
+
 3.先初步對資料了解，針對「年齡」和「性別」計算總人數
-```r 
+
+```{r} 
 #information about data(gender/age)
 survey2<-survey
 survey2%>%
@@ -50,7 +58,7 @@ survey2%>%
 #gender summary
 survey2$v12[survey2$v12==1]<-'male'
 survey2$v12[survey2$v12==2]<-'female'
-count(survey2,v12)
+count(survey2,v12,name='人數')
 #age summary
 survey2$v1[survey2$v1==1]<-'above15'
 survey2$v1[survey2$v1==2]<-'under15'
@@ -65,19 +73,23 @@ survey2$v13[survey2$v13==8]<-'above65'
 count(survey2,v1,name='人數')
 count(survey2,v13,name = '人數')
 ```
+
 4.從資料取出「年齡」、「性別」、「居住地」、「平日主要使用的交通工具」、「教育」以及「工作類型」
-```r 
+
+```{r} 
 #select the data which i want
 newdata<-survey %>%
   select(age=v13,sex=v12,location=v2_1,transportation=v6,education=v14,job=v15)
 head(newdata)
 ```
+
 5.想要分析的問題
 
-先將年齡分成三個階層，15到20歲、20到60歲以及60歲以上。
+*先將年齡分成三個階層，15到20歲、20到60歲以及60歲以上。
 
 Q1:各年齡層，計算每個縣市的使用大眾運輸百分率。
-```r 
+
+```{r} 
 #filter people who ages between 15-20 and between 20-60 and above 60
 youngadult<-newdata%>%
   select(age,location)%>%
@@ -94,9 +106,11 @@ elder<-newdata%>%
   filter(age>=7)
 head(elder,3)
 ```
+
 Q2:「性別」是否會影響搭乘大眾運輸?
-```r 
+
+```{r} 
 #determine the relationship between sex and transportation
-sex_VS_transport<-select(newdata,age,transportation)
+sex_VS_transport<-select(newdata,sex,transportation)
 head(sex_VS_transport,3)
 ```
