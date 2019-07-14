@@ -1,0 +1,39 @@
+---
+title: "data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+###資料來源：[https://data.gov.tw/dataset/6248]
+
+```{r cars}
+#load the data
+survey <- read.csv("C:/Users/user/Desktop/105data.csv")
+
+#import 'dplyr' and 'magrittr'
+library(dplyr)
+library(magrittr)
+
+#change chinese column name into english name 
+names(survey)[names(survey) == "嚜築1"] <- "v1"
+
+#information about data
+survey2<-survey
+survey2$v12[survey2$v12==1]<-'male'
+survey2$v12[survey2$v12==2]<-'female'
+count(survey2,v12)
+count(survey2,v13)
+
+#filter(1) age between 15-20 (2)student
+student<-filter(survey,v13==1|v13==2,v3_1==2)
+student2<-select(student,v12,v2_1,v5_1,v6,v15)
+student2$v2_1[(student2$v2_1<=133&student2$v2_1>=100)|(student2$v2_1<=2213&student2$v2_1>=2200)]<-1
+Taipei<-filter(student2,student2$v2_1==1)
+
+
+```
+
