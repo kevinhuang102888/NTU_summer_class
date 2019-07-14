@@ -378,26 +378,162 @@ $(document).ready(function () {
 </div>
 
 
-<div id="section" class="section level4">
-<h4>概論</h4>
+<div id="section" class="section level2">
+<h2>## 概論</h2>
 <p>為了環保節能與城市發展，政府積極推廣大眾運輸，大力興建捷運系統、重整公車系統或是規劃城市腳踏車系統，然而並非有了大眾運輸的出現，就能讓民眾從自駕車(汽車、機車)轉為大眾運輸，也應考慮到各個縣市的民眾對交通通勤的習慣、各縣市的大眾運輸建設或年齡層的不同等等因素，全方面的去討論，對於特定族群宣導，才能對症下藥。</p>
 </div>
-<div id="section-1" class="section level4">
-<h4>資料介紹</h4>
+<div id="section-1" class="section level2">
+<h2>## 資料介紹</h2>
 <p>這份資料來自交通部的「交通部統計處民眾日常使用運具狀況調查」，主要資料調查紀錄為各縣市民眾平常日使用運具之情形、民眾未使用公共運輸工具之原因、民眾使用公共運輸工具之滿意度及不滿意的原因。</p>
 <p>本次分析主要採用目前最新的調查版本(105年度)，並希望可以調查出「各縣市年齡層使用大眾運輸的使用率百分比」以及「性別是否影響搭乘大眾運輸」的討論</p>
 <p><a href="https://data.gov.tw/dataset/6248">資料來源</a></p>
 </div>
-<div id="code" class="section level4">
-<h4>code介紹</h4>
+<div id="code" class="section level2">
+<h2>## code介紹</h2>
 <p>1.先將需要的library匯入</p>
 <pre class="r"><code>#import &#39;dplyr&#39; and &#39;magrittr&#39;
-library(dplyr)
-library(magrittr)</code></pre>
+library(dplyr)</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 3.6.1</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(magrittr)</code></pre>
+<pre><code>## Warning: package &#39;magrittr&#39; was built under R version 3.6.1</code></pre>
 <p>2.取出需要的資料CSV，並調整fileEncoding為“UTF-8-BOM”，以防亂碼</p>
 <pre class="r"><code>#load the data
 survey &lt;- read.csv(&quot;C:/Users/user/Desktop/105data.csv&quot;,header=TRUE,fileEncoding=&quot;UTF-8-BOM&quot;)
 head(survey)</code></pre>
+<pre><code>##   v1 v13 v12 v2_1 v3_1 v3_2 v3_2_1  v4A v4B v5_1 v5_2 v5_3 v5_4 v5_5 v5_6
+## 1  1   8   2 1126    1    2     NA 1126  NA   13   14   15   NA   NA   NA
+## 2  1   8   1  612   98   NA     NA   NA  NA   14   NA   NA   NA   NA   NA
+## 3  1   5   2 2209    1    2     NA 2206  NA   14   NA   NA   NA   NA   NA
+## 4  1   8   1 1707   98   NA     NA   NA  NA    2   NA   NA   NA   NA   NA
+## 5  1   8   2  903    1    2     NA  903  NA   14   NA   NA   NA   NA   NA
+## 6  1   6   1  708    1    1      2  708  NA   14   NA   NA   NA   NA   NA
+##   v5_7 v5_8 v5_9 v5_10 v6 v7 v9_1A v9_1B v9_1C v9_1D v9_1E v9_1F v9_1G
+## 1   NA   NA   NA    NA 15  1     6    57    78     7    NA    NA    NA
+## 2   NA   NA   NA    NA 14  2    NA    NA    NA    NA    NA    NA    NA
+## 3   NA   NA   NA    NA 14  1    81     6     7    NA    NA    NA    NA
+## 4   NA   NA   NA    NA  2  2    NA    NA    NA    NA    NA    NA    NA
+## 5   NA   NA   NA    NA 14  2    NA    NA    NA    NA    NA    NA    NA
+## 6   NA   NA   NA    NA 14  1     6    32    34    57    78    32    34
+##   v9_1H v9_1I v9_1J v9_2XY v9_2AY v9_2BY v9_2CY v9_2DY v9_2EY v9_2FY
+## 1    NA    NA    NA     11     11     11     11     11     NA     NA
+## 2    NA    NA    NA     NA     NA     NA     NA     NA     NA     NA
+## 3    NA    NA    NA      0      0      0      0     NA     NA     NA
+## 4    NA    NA    NA     NA     NA     NA     NA     NA     NA     NA
+## 5    NA    NA    NA     NA     NA     NA     NA     NA     NA     NA
+## 6     7    43    49      7      7      7      7      7      7      7
+##   v9_2GY v9_2HY v9_2IY v9_2JY v9_2X v9_2A v9_2B v9_2C v9_2D v9_2E v9_2F
+## 1     NA     NA     NA     NA  1126  1126  1126  1126  1126    NA    NA
+## 2     NA     NA     NA     NA    NA    NA    NA    NA    NA    NA    NA
+## 3     NA     NA     NA     NA  2209  2206  2206  2209    NA    NA    NA
+## 4     NA     NA     NA     NA    NA    NA    NA    NA    NA    NA    NA
+## 5     NA     NA     NA     NA    NA    NA    NA    NA    NA    NA    NA
+## 6      7      7      7      7   708   708   703   708   708   708   703
+##   v9_2G v9_2H v9_2I v9_2J v9_2XX v9_2AX v9_2BX v9_2CX v9_2DX v9_2EX v9_2FX
+## 1    NA    NA    NA    NA      1      1      1      1      1     NA     NA
+## 2    NA    NA    NA    NA     NA     NA     NA     NA     NA     NA     NA
+## 3    NA    NA    NA    NA      1      2      1      2     NA     NA     NA
+## 4    NA    NA    NA    NA     NA     NA     NA     NA     NA     NA     NA
+## 5    NA    NA    NA    NA     NA     NA     NA     NA     NA     NA     NA
+## 6   708   708   708   708      1      1      2      2      1      1      2
+##   v9_2GX v9_2HX v9_2IX v9_2JX v9_3A1 v9_3A2 v9_3A3 v9_3A4 v9_3A5 v9_3B1
+## 1     NA     NA     NA     NA     15     NA     NA     NA     NA     15
+## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 3     NA     NA     NA     NA     14     NA     NA     NA     NA     14
+## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 6      2      1      1      1     14     NA     NA     NA     NA     15
+##   v9_3B2 v9_3B3 v9_3B4 v9_3B5 v9_3C1 v9_3C2 v9_3C3 v9_3C4 v9_3C5 v9_3D1
+## 1     NA     NA     NA     NA     15     NA     NA     NA     NA     15
+## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 3     NA     NA     NA     NA     14     NA     NA     NA     NA     NA
+## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 6     NA     NA     NA     NA     15     NA     NA     NA     NA     14
+##   v9_3D2 v9_3D3 v9_3D4 v9_3D5 v9_3E1 v9_3E2 v9_3E3 v9_3E4 v9_3E5 v9_3F1
+## 1     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 3     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 6     NA     NA     NA     NA     14     NA     NA     NA     NA     15
+##   v9_3F2 v9_3F3 v9_3F4 v9_3F5 v9_3G1 v9_3G2 v9_3G3 v9_3G4 v9_3G5 v9_3H1
+## 1     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 3     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 6     NA     NA     NA     NA     15     NA     NA     NA     NA     14
+##   v9_3H2 v9_3H3 v9_3H4 v9_3H5 v9_3I1 v9_3I2 v9_3I3 v9_3I4 v9_3I5 v9_3J1
+## 1     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 3     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 6     NA     NA     NA     NA     14     NA     NA     NA     NA     14
+##   v9_3J2 v9_3J3 v9_3J4 v9_3J5 v9_4A1 v9_4A2 v9_4A3 v9_4A4 v9_4A5 v9_4B1
+## 1     NA     NA     NA     NA      5     NA     NA     NA     NA      5
+## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 3     NA     NA     NA     NA     15     NA     NA     NA     NA     10
+## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 6     NA     NA     NA     NA      8     NA     NA     NA     NA     50
+##   v9_4B2 v9_4B3 v9_4B4 v9_4B5 v9_4C1 v9_4C2 v9_4C3 v9_4C4 v9_4C5 v9_4D1
+## 1     NA     NA     NA     NA      5     NA     NA     NA     NA      5
+## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 3     NA     NA     NA     NA     25     NA     NA     NA     NA     NA
+## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 6     NA     NA     NA     NA     50     NA     NA     NA     NA      8
+##   v9_4D2 v9_4D3 v9_4D4 v9_4D5 v9_4E1 v9_4E2 v9_4E3 v9_4E4 v9_4E5 v9_4F1
+## 1     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 3     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 6     NA     NA     NA     NA      8     NA     NA     NA     NA     50
+##   v9_4F2 v9_4F3 v9_4F4 v9_4F5 v9_4G1 v9_4G2 v9_4G3 v9_4G4 v9_4G5 v9_4H1
+## 1     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 3     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 6     NA     NA     NA     NA     50     NA     NA     NA     NA      8
+##   v9_4H2 v9_4H3 v9_4H4 v9_4H5 v9_4I1 v9_4I2 v9_4I3 v9_4I4 v9_4I5 v9_4J1
+## 1     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 3     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 6     NA     NA     NA     NA      3     NA     NA     NA     NA      3
+##   v9_4J2 v9_4J3 v9_4J4 v9_4J5 v10_01 v10_02 v10_03 v10_04 v10_05 v10_06
+## 1     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 2     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 3     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 4     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 5     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+## 6     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA
+##   v10_07 v10_08 v10_09 v10_10 v10_11 v10_31 v10_32 v10_33 v11_1 v11_2
+## 1     NA     NA     NA     NA     NA     NA     NA     NA     7    NA
+## 2     NA     NA     NA     NA     NA     NA     NA     NA    NA    NA
+## 3     NA     NA     NA     NA     NA     NA     NA     NA     1    15
+## 4     NA     NA     NA     NA     NA     NA     NA     NA    NA    NA
+## 5     NA     NA     NA     NA     NA     NA     NA     NA    NA    NA
+## 6     NA     NA     NA     NA     NA     NA     NA     NA     1     6
+##   v11_3 v11_4 v11_5 v14 v15 clas        w2        w3
+## 1    NA    NA    NA   1   1    3 0.1912575 0.2039235
+## 2    NA    NA    NA   4  10    1 0.7515268 1.2131282
+## 3     3    NA    NA   5   7    1 1.2699541 3.6111581
+## 4    NA    NA    NA   4  10    1 0.5840827 0.2382896
+## 5    NA    NA    NA   1   1    1 0.5225517 0.3673015
+## 6     7    NA    NA   3   7    1 0.8411799 1.1816600</code></pre>
 <p>3.先初步對資料了解，針對「年齡」和「性別」計算總人數</p>
 <pre class="r"><code>#information about data(gender/age)
 survey2&lt;-survey
@@ -405,12 +541,18 @@ survey2%&gt;%
   nrow()%&gt;%
   toString()%&gt;%
   paste(&#39;調查人數：&#39;,.,&#39;人&#39;)%&gt;%
-  print()
-#gender summary
+  print()</code></pre>
+<pre><code>## [1] &quot;調查人數： 40246 人&quot;</code></pre>
+<pre class="r"><code>#gender summary
 survey2$v12[survey2$v12==1]&lt;-&#39;male&#39;
 survey2$v12[survey2$v12==2]&lt;-&#39;female&#39;
-count(survey2,v12)
-#age summary
+count(survey2,v12,name=&#39;人數&#39;)</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   v12     人數
+##   &lt;chr&gt;  &lt;int&gt;
+## 1 female 22215
+## 2 male   18031</code></pre>
+<pre class="r"><code>#age summary
 survey2$v1[survey2$v1==1]&lt;-&#39;above15&#39;
 survey2$v1[survey2$v1==2]&lt;-&#39;under15&#39;
 survey2$v13[survey2$v13==1]&lt;-&#39;15-18&#39;
@@ -421,34 +563,71 @@ survey2$v13[survey2$v13==5]&lt;-&#39;40-50&#39;
 survey2$v13[survey2$v13==6]&lt;-&#39;50-60&#39;
 survey2$v13[survey2$v13==7]&lt;-&#39;60-65&#39;
 survey2$v13[survey2$v13==8]&lt;-&#39;above65&#39;
-count(survey2,v1,name=&#39;人數&#39;)
-count(survey2,v13,name = &#39;人數&#39;)</code></pre>
+count(survey2,v1,name=&#39;人數&#39;)</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   v1       人數
+##   &lt;chr&gt;   &lt;int&gt;
+## 1 above15 40246</code></pre>
+<pre class="r"><code>count(survey2,v13,name = &#39;人數&#39;)</code></pre>
+<pre><code>## # A tibble: 8 x 2
+##   v13      人數
+##   &lt;chr&gt;   &lt;int&gt;
+## 1 15-18    1933
+## 2 18-20     862
+## 3 20-30    4590
+## 4 30-40    4045
+## 5 40-50    5338
+## 6 50-60    7436
+## 7 60-65    4737
+## 8 above65 11305</code></pre>
 <p>4.從資料取出「年齡」、「性別」、「居住地」、「平日主要使用的交通工具」、「教育」以及「工作類型」</p>
 <pre class="r"><code>#select the data which i want
 newdata&lt;-survey %&gt;%
   select(age=v13,sex=v12,location=v2_1,transportation=v6,education=v14,job=v15)
 head(newdata)</code></pre>
+<pre><code>##   age sex location transportation education job
+## 1   8   2     1126             15         1   1
+## 2   8   1      612             14         4  10
+## 3   5   2     2209             14         5   7
+## 4   8   1     1707              2         4  10
+## 5   8   2      903             14         1   1
+## 6   6   1      708             14         3   7</code></pre>
 <p>5.想要分析的問題</p>
-<p>先將年齡分成三個階層，15到20歲、20到60歲以及60歲以上。 Q1:各年齡層，計算每個縣市的使用大眾運輸百分率。</p>
+<p>*先將年齡分成三個階層，15到20歲、20到60歲以及60歲以上。</p>
+<p>Q1:各年齡層，計算每個縣市的使用大眾運輸百分率。</p>
 <pre class="r"><code>#filter people who ages between 15-20 and between 20-60 and above 60
 youngadult&lt;-newdata%&gt;%
   select(age,location)%&gt;%
   filter(age==1|age==2)
-head(youngadult,3)
-
-adult&lt;-newdata%&gt;%
+head(youngadult,3)</code></pre>
+<pre><code>##   age location
+## 1   1     1120
+## 2   1     1514
+## 3   1     1704</code></pre>
+<pre class="r"><code>adult&lt;-newdata%&gt;%
   select(age,location)%&gt;%
   filter(age&gt;=3&amp;age&lt;=6)
-head(adult,3)
-
-elder&lt;-newdata%&gt;%
+head(adult,3)</code></pre>
+<pre><code>##   age location
+## 1   5     2209
+## 2   6      708
+## 3   5     1414</code></pre>
+<pre class="r"><code>elder&lt;-newdata%&gt;%
   select(age,location)%&gt;%
   filter(age&gt;=7)
 head(elder,3)</code></pre>
+<pre><code>##   age location
+## 1   8     1126
+## 2   8      612
+## 3   8     1707</code></pre>
 <p>Q2:「性別」是否會影響搭乘大眾運輸?</p>
 <pre class="r"><code>#determine the relationship between sex and transportation
-sex_VS_transport&lt;-select(newdata,age,transportation)
+sex_VS_transport&lt;-select(newdata,sex,transportation)
 head(sex_VS_transport,3)</code></pre>
+<pre><code>##   sex transportation
+## 1   2             15
+## 2   1             14
+## 3   2             14</code></pre>
 </div>
 
 
