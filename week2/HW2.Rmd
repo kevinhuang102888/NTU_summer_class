@@ -27,7 +27,6 @@ library(ggplot2)
 ```{r}
 #load the data
 newdata2<-read.csv('C:\\Users\\user\\Desktop\\newdata2.csv',sep=",")
-levels(newdata2$transportation)
 head(newdata2,5)
 ```
 
@@ -37,10 +36,11 @@ head(newdata2,5)
 
 ```{r}
 #get certain part of data (15-20,20-60,60UP)
+levels(newdata2$transportation)
 certaindata<-function(data,expression){
   certain<-data%>%
     dplyr::select(sex,age,location,transportation)%>%
-    filter(expression&(as.integer(newdata2$transportation)==5|as.integer(newdata2$transportation)==6|as.integer(newdata2$transportation)==7|as.integer(newdata2$transportation)==8|as.integer(newdata2$transportation)==19))
+    filter(expression&(as.integer(newdata2$transportation)%in%c(2,3,4,10,14,15,16,18)))
   certain
 }
 #get the rate about whether people commute by public transportation
@@ -50,7 +50,7 @@ getrate<-function(data,data2,expression){
     filter(expression)
   h1<-count(total,location)
   h2<-count(data2,location)
-  rate<-data.frame(h1[1],1-h2[2]/h1[2])
+  rate<-data.frame(h1[1],h2[2]/h1[2])
   names(rate)<-c('location','rate')
   rate
 }
@@ -100,9 +100,48 @@ ggplot(p3,aes(x=location,y=rate))+
 
 ```
 
+5.全台灣各縣市大眾運輸使用率區域分配圖(不分年齡)
+
+```{r warning=FALSE}
+#set up the libraries which i need
+library(GISTools)
+library(rgdal)
+library(sp)
+library(dplyr)
+
+#get the data and map
+setwd('C:/Users/user/Desktop/test')
+TW <- readOGR(dsn = ".", layer = "COUNTY_MOI_1080617",use_iconv = TRUE, encoding="UTF-8") 
+map<-TW@data
+rate<-read.csv('C:\\Users\\user\\Desktop\\alldata.csv')
+
+#combine two data
+rate2<-rate
+rate2$location<-as.character(rate2$location)
+rate2$location<-c('New Taipei City','Yilan County','Taoyuan City','Hsinchu County',
+                  'Miaoli County','Taichung City','Changhua County','Nantou County',
+                  'Yunlin County','Chiayi County','Tainan City','Kaohsiung City',
+                  'Pingtung County','Taitung County','Hualien County','Penghu County',
+                  'Keelung City','Hsinchu City','Chiayi City','Taipei City',
+                  'Kinmen County','Lienchiang County')
+order_map <- map[ order(map$COUNTYENG), ]
+order_rate<-rate2[order(rate2$location),]
+order_map$avg_R<-order_rate$n
+order_map<-order_map[order(as.numeric(rownames(order_map))),,drop=FALSE]
+
+# plot
+par(mar = c(0,0,3,1)) 
+shades <- auto.shading(order_map$avg_R, cutter = quantileCuts,n =5, cols = brewer.pal(5, "Greens"))
+choropleth(TW, order_map$avg_R, shading=shades,cex=4) 
+title('台灣各縣市民眾搭乘大眾運輸使用率')
+choro.legend(125.4193,20.76209, shades,title='大眾運輸使用率(%)')
+
+```
 
 ## 結論
 
-從三張長條圖可知兩件事情,第一件訊息是雙北地區的使用率仍比較高，值得一提，外島地區的使用率也挺高的，至於其他縣市就稍微低了些，可見交通建設多寡還是有很大的影響；第二個訊息是青年人使用率最高，接下來是老人次之，最後才是壯年人，可能因為壯年人會因為工作需求，需要機動性比較高的機車或汽車來通勤，導致大眾運輸使用率較低，與其他年齡相比，有明顯較為低，如果政府想到提高民眾使用大眾運輸搭乘率，可以先針對這類群人做宣導。
+透過「年齡層」個別去分析，可以發現「年輕人(18-20歲)」以及「老人(60歲以上)」選擇搭乘大眾運輸的機率比較高，原因可能是因為「年輕人」多為學生，沒有屬於自己機車或汽車，老人為了安全緣故，他們才選擇搭乘大眾運輸，而相反的，壯年人(20-60歲)可以看出相對低很多，為了工作方便，多以機車或汽車為通勤、代步工具。
+
+從「台灣各縣市民眾搭乘大眾運輸使用率」這張圖中，可以發現「北部」縣市的民眾較常使用大眾運輸可能是因為大眾運輸系統較完善，而南部的民眾就不太習慣使用大眾運輸系統。
 
 
