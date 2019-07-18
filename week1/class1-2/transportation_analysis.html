@@ -527,23 +527,20 @@ survey2$v6&lt;-factor(survey2$v6,labels=c(&#39;捷運&#39;,&#39;市區公車&#39
 &#39;步行&#39;,&#39;自行車&#39;,&#39;機車&#39;,&#39;自用小客車(含小客貨兩用車)&#39;,
 &#39;自用大客車&#39;,&#39;自用小貨車&#39;,&#39;自用大貨車(含大客貨兩用車)&#39;,
 &#39;不知道/拒答&#39;))
-survey2$v11_1&lt;-factor(survey2$v11_1,labels=c(&#39;距離車站(包括各種公共運具車站)太遠(含住家附近或目的地沒有車站)&#39;,&#39;公共運具本身開較慢&#39;,&#39;班次時間無法配合(含班次太少)&#39;,
-                                        &#39;搭乘公共運具整體費用較貴&#39;,&#39;公共運具人潮壅擠，不舒適&#39;,&#39;不習慣或不知道如何搭乘公共運具&#39;,&#39;開車(或騎車)較方便&#39;,&#39;站牌標示不清&#39;,
-                                             &#39;搭乘公共運具時，需換車多次太麻煩&#39;,&#39;外出之目的地很近，不需交通工具&#39;,&#39;公司(學校)有提供交通車或公務車&#39;,&#39;騎腳踏車可以健身&#39;,
-                                             &#39;搭乘公共運具較不安全&#39;,&#39;候車或換車時間較長&#39;,&#39;開車(或騎車)較節省時間&#39;,&#39;不知道/拒答&#39;,&#39;未填答&#39;),exclude = NULL)</code></pre>
+survey2$v11_1&lt;-factor(survey2$v11_1,labels=c(&#39;距離車站(包括各種公共運具車站)太遠(含住家附近或目的地沒有車站)&#39;,&#39;公共運具本身開較慢&#39;,&#39;班次時間無法配合(含班次太少)&#39;,           &#39;搭乘公共運具整體費用較貴&#39;,&#39;公共運具人潮壅擠，不舒適&#39;,&#39;不習慣或不知道如何搭乘公共運具&#39;,&#39;開車(或騎車)較方便&#39;,&#39;站牌標示不清&#39;,                                      &#39;搭乘公共運具時，需換車多次太麻煩&#39;,&#39;外出之目的地很近，不需交通工具&#39;,&#39;公司(學校)有提供交通車或公務車&#39;,&#39;騎腳踏車可以健身&#39;,                                             &#39;搭乘公共運具較不安全&#39;,&#39;候車或換車時間較長&#39;,&#39;開車(或騎車)較節省時間&#39;,&#39;不知道/拒答&#39;,&#39;未填答&#39;),exclude = NULL)</code></pre>
 <p>4.從資料取出「年齡」、「性別」、「居住地」、「平日主要使用的交通工具」、「教育」以及「工作類型」</p>
 <pre class="r"><code>#select the data which i want
 newdata&lt;-survey2%&gt;%
   dplyr::select(age=v13,sex=v12,location=v2_1,transportation=v6,education=v14,job=v15)
-head(newdata)</code></pre>
-<pre><code>##       age    sex location             transportation education job
-## 1 above65 female 原台南縣 自用小客車(含小客貨兩用車)  小學以下   1
-## 2 above65   male 原台中縣                       機車      專科  10
-## 3   40-50 female   台北市                       機車      大學   7
-## 4 above65   male   基隆市                   市區公車      專科  10
-## 5 above65 female   雲林縣                       機車  小學以下   1
-## 6   50-60   male   彰化縣                       機車      高中   7</code></pre>
-<pre class="r"><code>write.table(newdata,file=&quot;C:\\Users\\user\\Desktop\\test\\newdata.csv&quot;,sep=&quot;,&quot;,row.names=F, na = &quot;NA&quot;)</code></pre>
+str(newdata)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    40246 obs. of  6 variables:
+##  $ age           : Factor w/ 8 levels &quot;15-18&quot;,&quot;18-20&quot;,..: 8 8 5 8 8 6 5 6 3 3 ...
+##  $ sex           : Factor w/ 2 levels &quot;male&quot;,&quot;female&quot;: 2 1 2 1 2 1 1 1 1 2 ...
+##  $ location      : Factor w/ 25 levels &quot;新北市&quot;,&quot;宜蘭縣&quot;,..: 11 6 22 17 9 7 14 6 1 23 ...
+##  $ transportation: Factor w/ 19 levels &quot;捷運&quot;,&quot;市區公車&quot;,..: 15 14 14 2 14 14 15 14 14 14 ...
+##  $ education     : Factor w/ 7 levels &quot;小學以下&quot;,&quot;國初中&quot;,..: 1 4 5 4 1 3 2 3 5 5 ...
+##  $ job           : int  1 10 7 10 1 7 5 10 4 3 ...</code></pre>
+<pre class="r"><code>write.table(newdata,file=&quot;C:\\Users\\user\\Desktop\\newdata2.csv&quot;,sep=&quot;,&quot;,row.names=F)</code></pre>
 <p>5.想要分析的問題</p>
 <p>Q1:先將年齡分成三個階層，15到20歲、20到60歲以及60歲以上。以各年齡層來說，計算每個縣市的使用大眾運輸百分率。(附:不分年齡的檔案)</p>
 <p>設計兩個function，一個為找到特定年齡搭乘大眾運輸的資料，另一個是計算特定年齡搭乘大眾運輸除以該年齡層之人數的比率</p>
@@ -571,67 +568,50 @@ getrate&lt;-function(data,data2,expression){
 expression1&lt;-newdata$age==&#39;15-18&#39;|newdata$age==&#39;18-20&#39;
 youngadult&lt;-certaindata(newdata,expression1)
 p1&lt;-getrate(newdata,youngadult,expression1)
-total&lt;-newdata%&gt;%
-    dplyr::select(sex,age,location,transportation)%&gt;%
-    filter(expression1)
-h1&lt;-count(total,location)
-h2&lt;-count(youngadult,location)
-rate&lt;-data.frame(h1[1],1-h2[2]/h1[2])
-names(rate)&lt;-c(&#39;location&#39;,&#39;rate&#39;)
-rate</code></pre>
-<pre><code>##    location      rate
-## 1    新北市 0.7913043
-## 2    宜蘭縣 0.6034483
-## 3    桃園縣 0.6237624
-## 4    新竹縣 0.7118644
-## 5    苗栗縣 0.6357143
-## 6  原台中縣 0.6212121
-## 7    彰化縣 0.7043478
-## 8    南投縣 0.6355140
-## 9    雲林縣 0.6942149
-## 10   嘉義縣 0.6617647
-## 11 原台南縣 0.6315789
-## 12 原高雄縣 0.6260163
-## 13   屏東縣 0.5312500
-## 14   台東縣 0.5920000
-## 15   花蓮縣 0.5824176
-## 16   澎湖縣 0.7179487
-## 17   基隆市 0.7901235
-## 18   新竹市 0.5794393
-## 19   台中市 0.6880734
-## 20   嘉義市 0.5045045
-## 21   台南市 0.5048544
-## 22   台北市 0.8900000
-## 23   高雄市 0.7160494
-## 24   金門縣 0.7619048
-## 25   連江縣 0.7777778</code></pre>
-<pre class="r"><code>levels(newdata$transportation)</code></pre>
-<pre><code>##  [1] &quot;捷運&quot;                       &quot;市區公車&quot;                  
-##  [3] &quot;公路客運&quot;                   &quot;計程車(含共乘)&quot;            
-##  [5] &quot;臺鐵&quot;                       &quot;高鐵&quot;                      
-##  [7] &quot;渡輪&quot;                       &quot;交通車&quot;                    
-##  [9] &quot;免費公車&quot;                   &quot;國道客運&quot;                  
-## [11] &quot;飛機&quot;                       &quot;步行&quot;                      
-## [13] &quot;自行車&quot;                     &quot;機車&quot;                      
-## [15] &quot;自用小客車(含小客貨兩用車)&quot; &quot;自用大客車&quot;                
-## [17] &quot;自用小貨車&quot;                 &quot;自用大貨車(含大客貨兩用車)&quot;
-## [19] &quot;不知道/拒答&quot;</code></pre>
+head(p1)</code></pre>
+<pre><code>##   location      rate
+## 1   新北市 0.7913043
+## 2   宜蘭縣 0.6034483
+## 3   桃園縣 0.6237624
+## 4   新竹縣 0.7118644
+## 5   苗栗縣 0.6357143
+## 6 原台中縣 0.6212121</code></pre>
 <pre class="r"><code>#age between 20 and 60
 expression2&lt;-as.integer(newdata$age)&gt;=3&amp;as.integer(newdata$age)&lt;=6
 adult&lt;-certaindata(newdata,expression2)
 p2&lt;-getrate(newdata,adult,expression2)
-
-
-#age above 60
+head(p2)</code></pre>
+<pre><code>##   location       rate
+## 1   新北市 0.35105316
+## 2   宜蘭縣 0.10315534
+## 3   桃園縣 0.15459459
+## 4   新竹縣 0.08350731
+## 5   苗栗縣 0.10308183
+## 6 原台中縣 0.08223350</code></pre>
+<pre class="r"><code>#age above 60
 expression3&lt;-newdata$age==&#39;60-65&#39;|newdata$age==&#39;above65&#39;
 elder&lt;-certaindata(newdata,expression3)
 p3&lt;-getrate(newdata,elder,expression3)
-
-
-#不分年齡
+head(p3)</code></pre>
+<pre><code>##   location      rate
+## 1   新北市 0.6096257
+## 2   宜蘭縣 0.3745124
+## 3   桃園縣 0.3629032
+## 4   新竹縣 0.3344156
+## 5   苗栗縣 0.3451910
+## 6 原台中縣 0.3535529</code></pre>
+<pre class="r"><code>#不分年齡
 all&lt;-count(newdata,location)
 all_trans&lt;-count(filter(newdata,as.integer(newdata$transportation)&gt;=14&amp;as.integer(newdata$transportation)&lt;=18),location)
-p4&lt;-data.frame(all[1],1-all_trans[2]/all[2])</code></pre>
+p4&lt;-data.frame(all[1],1-all_trans[2]/all[2])
+head(p4)</code></pre>
+<pre><code>##   location         n
+## 1   新北市 0.4903226
+## 2   宜蘭縣 0.2656524
+## 3   桃園縣 0.2588699
+## 4   新竹縣 0.2239953
+## 5   苗栗縣 0.2478261
+## 6 原台中縣 0.2213695</code></pre>
 <p>Q2:「性別」是否會影響搭乘大眾運輸?</p>
 <pre class="r"><code>#determine the relationship between sex and transportation
 sex_VS_transport&lt;-select(newdata,sex,transportation)
