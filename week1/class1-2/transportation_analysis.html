@@ -515,14 +515,14 @@ survey2&lt;-survey
 survey2$v12&lt;-factor(survey2$v12,labels=c(&#39;male&#39;,&#39;female&#39;))
 survey2$v13&lt;-factor(survey2$v13,labels=c(&#39;15-18&#39;,&#39;18-20&#39;,&#39;20-30&#39;,&#39;30-40&#39;,&#39;40-50&#39;,&#39;50-60&#39;,&#39;60-65&#39;,&#39;above65&#39;))
 survey2$v14&lt;-factor(survey2$v14,labels=c(&#39;小學以下&#39;,&#39;國初中&#39;,&#39;高中&#39;,&#39;專科&#39;,&#39;大學&#39;,&#39;研究所&#39;,&#39;不知道&#39;))
-region&lt;-c(&#39;新北市&#39;,&#39;宜蘭縣&#39;,&#39;桃園縣&#39;,&#39;新竹縣&#39;,&#39;苗栗縣&#39;,
-          &#39;台中市&#39;,&#39;彰化縣&#39;,&#39;南投縣&#39;,&#39;雲林縣&#39;,&#39;嘉義縣&#39;,
-          &#39;台南縣&#39;,&#39;高雄縣&#39;,&#39;屏東縣&#39;,&#39;台東縣&#39;,&#39;花蓮縣&#39;,
-          &#39;澎湖縣&#39;,&#39;基隆市&#39;,&#39;新竹市&#39;,&#39;台中市&#39;,&#39;嘉義市&#39;,
-          &#39;台南市&#39;,&#39;台北市&#39;,&#39;高雄市&#39;,&#39;金門縣&#39;,&#39;連江縣&#39;)
 for (x in 1:25){
-  survey2$v2_1[(as.numeric(survey2$v2_1)%/%100)==x]&lt;-region[x]
+  survey2$v2_1[(as.numeric(survey2$v2_1)%/%100)==x]&lt;-x
 }
+survey2$v2_1&lt;-factor(survey2$v2_1,labels=c(&#39;新北市&#39;,&#39;宜蘭縣&#39;,&#39;桃園縣&#39;,&#39;新竹縣&#39;,&#39;苗栗縣&#39;,
+          &#39;原台中縣&#39;,&#39;彰化縣&#39;,&#39;南投縣&#39;,&#39;雲林縣&#39;,&#39;嘉義縣&#39;,
+          &#39;原台南縣&#39;,&#39;原高雄縣&#39;,&#39;屏東縣&#39;,&#39;台東縣&#39;,&#39;花蓮縣&#39;,
+          &#39;澎湖縣&#39;,&#39;基隆市&#39;,&#39;新竹市&#39;,&#39;台中市&#39;,&#39;嘉義市&#39;,
+          &#39;台南市&#39;,&#39;台北市&#39;,&#39;高雄市&#39;,&#39;金門縣&#39;,&#39;連江縣&#39;))
 survey2$v6&lt;-factor(survey2$v6,labels=c(&#39;捷運&#39;,&#39;市區公車&#39;,&#39;公路客運&#39;,&#39;計程車(含共乘)&#39;,&#39;臺鐵&#39;,&#39;高鐵&#39;,&#39;渡輪&#39;,&#39;交通車&#39;,&#39;免費公車&#39;,&#39;國道客運&#39;,&#39;飛機&#39;,
 &#39;步行&#39;,&#39;自行車&#39;,&#39;機車&#39;,&#39;自用小客車(含小客貨兩用車)&#39;,
 &#39;自用大客車&#39;,&#39;自用小貨車&#39;,&#39;自用大貨車(含大客貨兩用車)&#39;,
@@ -533,16 +533,16 @@ survey2$v11_1&lt;-factor(survey2$v11_1,labels=c(&#39;距離車站(包括各種�
                                              &#39;搭乘公共運具較不安全&#39;,&#39;候車或換車時間較長&#39;,&#39;開車(或騎車)較節省時間&#39;,&#39;不知道/拒答&#39;,&#39;未填答&#39;),exclude = NULL)</code></pre>
 <p>4.從資料取出「年齡」、「性別」、「居住地」、「平日主要使用的交通工具」、「教育」以及「工作類型」</p>
 <pre class="r"><code>#select the data which i want
-newdata&lt;-survey %&gt;%
+newdata&lt;-survey2%&gt;%
   dplyr::select(age=v13,sex=v12,location=v2_1,transportation=v6,education=v14,job=v15)
 head(newdata)</code></pre>
-<pre><code>##   age sex location transportation education job
-## 1   8   2     1126             15         1   1
-## 2   8   1      612             14         4  10
-## 3   5   2     2209             14         5   7
-## 4   8   1     1707              2         4  10
-## 5   8   2      903             14         1   1
-## 6   6   1      708             14         3   7</code></pre>
+<pre><code>##       age    sex location             transportation education job
+## 1 above65 female 原台南縣 自用小客車(含小客貨兩用車)  小學以下   1
+## 2 above65   male 原台中縣                       機車      專科  10
+## 3   40-50 female   台北市                       機車      大學   7
+## 4 above65   male   基隆市                   市區公車      專科  10
+## 5 above65 female   雲林縣                       機車  小學以下   1
+## 6   50-60   male   彰化縣                       機車      高中   7</code></pre>
 <pre class="r"><code>write.table(newdata,file=&quot;C:\\Users\\user\\Desktop\\test\\newdata.csv&quot;,sep=&quot;,&quot;,row.names=F, na = &quot;NA&quot;)</code></pre>
 <p>5.想要分析的問題</p>
 <p>Q1:先將年齡分成三個階層，15到20歲、20到60歲以及60歲以上。以各年齡層來說，計算每個縣市的使用大眾運輸百分率。(附:不分年齡的檔案)</p>
@@ -551,7 +551,7 @@ head(newdata)</code></pre>
 certaindata&lt;-function(data,expression){
   certain&lt;-data%&gt;%
     dplyr::select(sex,age,location,transportation)%&gt;%
-    filter(expression&amp;as.integer(newdata$transportation)&gt;=14&amp;as.integer(newdata$transportation)&lt;=18)
+    filter(expression&amp;as.integer(newdata$transportation)&gt;=14&amp;as.integer(newdata$transportation)&lt;=19)
   certain
 }
 #get the rate about whether people commute by public transportation
@@ -571,9 +571,52 @@ getrate&lt;-function(data,data2,expression){
 expression1&lt;-newdata$age==&#39;15-18&#39;|newdata$age==&#39;18-20&#39;
 youngadult&lt;-certaindata(newdata,expression1)
 p1&lt;-getrate(newdata,youngadult,expression1)
-
-
-#age between 20 and 60
+total&lt;-newdata%&gt;%
+    dplyr::select(sex,age,location,transportation)%&gt;%
+    filter(expression1)
+h1&lt;-count(total,location)
+h2&lt;-count(youngadult,location)
+rate&lt;-data.frame(h1[1],1-h2[2]/h1[2])
+names(rate)&lt;-c(&#39;location&#39;,&#39;rate&#39;)
+rate</code></pre>
+<pre><code>##    location      rate
+## 1    新北市 0.7913043
+## 2    宜蘭縣 0.6034483
+## 3    桃園縣 0.6237624
+## 4    新竹縣 0.7118644
+## 5    苗栗縣 0.6357143
+## 6  原台中縣 0.6212121
+## 7    彰化縣 0.7043478
+## 8    南投縣 0.6355140
+## 9    雲林縣 0.6942149
+## 10   嘉義縣 0.6617647
+## 11 原台南縣 0.6315789
+## 12 原高雄縣 0.6260163
+## 13   屏東縣 0.5312500
+## 14   台東縣 0.5920000
+## 15   花蓮縣 0.5824176
+## 16   澎湖縣 0.7179487
+## 17   基隆市 0.7901235
+## 18   新竹市 0.5794393
+## 19   台中市 0.6880734
+## 20   嘉義市 0.5045045
+## 21   台南市 0.5048544
+## 22   台北市 0.8900000
+## 23   高雄市 0.7160494
+## 24   金門縣 0.7619048
+## 25   連江縣 0.7777778</code></pre>
+<pre class="r"><code>levels(newdata$transportation)</code></pre>
+<pre><code>##  [1] &quot;捷運&quot;                       &quot;市區公車&quot;                  
+##  [3] &quot;公路客運&quot;                   &quot;計程車(含共乘)&quot;            
+##  [5] &quot;臺鐵&quot;                       &quot;高鐵&quot;                      
+##  [7] &quot;渡輪&quot;                       &quot;交通車&quot;                    
+##  [9] &quot;免費公車&quot;                   &quot;國道客運&quot;                  
+## [11] &quot;飛機&quot;                       &quot;步行&quot;                      
+## [13] &quot;自行車&quot;                     &quot;機車&quot;                      
+## [15] &quot;自用小客車(含小客貨兩用車)&quot; &quot;自用大客車&quot;                
+## [17] &quot;自用小貨車&quot;                 &quot;自用大貨車(含大客貨兩用車)&quot;
+## [19] &quot;不知道/拒答&quot;</code></pre>
+<pre class="r"><code>#age between 20 and 60
 expression2&lt;-as.integer(newdata$age)&gt;=3&amp;as.integer(newdata$age)&lt;=6
 adult&lt;-certaindata(newdata,expression2)
 p2&lt;-getrate(newdata,adult,expression2)
@@ -593,17 +636,17 @@ p4&lt;-data.frame(all[1],1-all_trans[2]/all[2])</code></pre>
 <pre class="r"><code>#determine the relationship between sex and transportation
 sex_VS_transport&lt;-select(newdata,sex,transportation)
 head(sex_VS_transport,10)</code></pre>
-<pre><code>##    sex transportation
-## 1    2             15
-## 2    1             14
-## 3    2             14
-## 4    1              2
-## 5    2             14
-## 6    1             14
-## 7    1             15
-## 8    1             14
-## 9    1             14
-## 10   2             14</code></pre>
+<pre><code>##       sex             transportation
+## 1  female 自用小客車(含小客貨兩用車)
+## 2    male                       機車
+## 3  female                       機車
+## 4    male                   市區公車
+## 5  female                       機車
+## 6    male                       機車
+## 7    male 自用小客車(含小客貨兩用車)
+## 8    male                       機車
+## 9    male                       機車
+## 10 female                       機車</code></pre>
 </div>
 
 
