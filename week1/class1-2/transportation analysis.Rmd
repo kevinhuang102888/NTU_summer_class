@@ -65,10 +65,7 @@ survey2$v6<-factor(survey2$v6,labels=c('捷運','市區公車','公路客運','�
 '步行','自行車','機車','自用小客車(含小客貨兩用車)',
 '自用大客車','自用小貨車','自用大貨車(含大客貨兩用車)',
 '不知道/拒答'))
-survey2$v11_1<-factor(survey2$v11_1,labels=c('距離車站(包括各種公共運具車站)太遠(含住家附近或目的地沒有車站)','公共運具本身開較慢','班次時間無法配合(含班次太少)',
-                                        '搭乘公共運具整體費用較貴','公共運具人潮壅擠，不舒適','不習慣或不知道如何搭乘公共運具','開車(或騎車)較方便','站牌標示不清',
-                                             '搭乘公共運具時，需換車多次太麻煩','外出之目的地很近，不需交通工具','公司(學校)有提供交通車或公務車','騎腳踏車可以健身',
-                                             '搭乘公共運具較不安全','候車或換車時間較長','開車(或騎車)較節省時間','不知道/拒答','未填答'),exclude = NULL)
+survey2$v11_1<-factor(survey2$v11_1,labels=c('距離車站(包括各種公共運具車站)太遠(含住家附近或目的地沒有車站)','公共運具本身開較慢','班次時間無法配合(含班次太少)',           '搭乘公共運具整體費用較貴','公共運具人潮壅擠，不舒適','不習慣或不知道如何搭乘公共運具','開車(或騎車)較方便','站牌標示不清',                                      '搭乘公共運具時，需換車多次太麻煩','外出之目的地很近，不需交通工具','公司(學校)有提供交通車或公務車','騎腳踏車可以健身',                                             '搭乘公共運具較不安全','候車或換車時間較長','開車(或騎車)較節省時間','不知道/拒答','未填答'),exclude = NULL)
 ```
 
 4.從資料取出「年齡」、「性別」、「居住地」、「平日主要使用的交通工具」、「教育」以及「工作類型」
@@ -77,8 +74,8 @@ survey2$v11_1<-factor(survey2$v11_1,labels=c('距離車站(包括各種公共運
 #select the data which i want
 newdata<-survey2%>%
   dplyr::select(age=v13,sex=v12,location=v2_1,transportation=v6,education=v14,job=v15)
-head(newdata)
-write.table(newdata,file="C:\\Users\\user\\Desktop\\test\\newdata.csv",sep=",",row.names=F, na = "NA")
+str(newdata)
+write.table(newdata,file="C:\\Users\\user\\Desktop\\newdata2.csv",sep=",",row.names=F)
 ```
 
 
@@ -116,33 +113,26 @@ getrate<-function(data,data2,expression){
 expression1<-newdata$age=='15-18'|newdata$age=='18-20'
 youngadult<-certaindata(newdata,expression1)
 p1<-getrate(newdata,youngadult,expression1)
-total<-newdata%>%
-    dplyr::select(sex,age,location,transportation)%>%
-    filter(expression1)
-h1<-count(total,location)
-h2<-count(youngadult,location)
-rate<-data.frame(h1[1],1-h2[2]/h1[2])
-names(rate)<-c('location','rate')
-rate
+head(p1)
 
-levels(newdata$transportation)
+
 #age between 20 and 60
 expression2<-as.integer(newdata$age)>=3&as.integer(newdata$age)<=6
 adult<-certaindata(newdata,expression2)
 p2<-getrate(newdata,adult,expression2)
-
+head(p2)
 
 #age above 60
 expression3<-newdata$age=='60-65'|newdata$age=='above65'
 elder<-certaindata(newdata,expression3)
 p3<-getrate(newdata,elder,expression3)
-
+head(p3)
 
 #不分年齡
 all<-count(newdata,location)
 all_trans<-count(filter(newdata,as.integer(newdata$transportation)>=14&as.integer(newdata$transportation)<=18),location)
 p4<-data.frame(all[1],1-all_trans[2]/all[2])
-
+head(p4)
 ```
 
 Q2:「性別」是否會影響搭乘大眾運輸?
