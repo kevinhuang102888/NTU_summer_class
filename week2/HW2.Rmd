@@ -1,0 +1,107 @@
+---
+title: "transportation analysis2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 前序
+
+延續作業1的主題「民眾大眾交通搭乘分析」，已找到從原始資料萃取出我想要的資料(newdata.csv)，想透過這個資料觀察是否「年齡」對於「大眾運輸搭乘率」會不會有影響。
+
+另外因為資料是調查抽樣資料，抽樣人數各縣市不一，故以百分比的方式呈現「大眾運輸搭乘率」。
+
+## code
+
+1.匯入需要的library
+
+```{r}
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+```
+
+2.匯入前一份作業已收集的資料
+```{r}
+#load the data
+newdata<-read.csv('C:\\Users\\user\\Desktop\\test\\newdata.csv')
+head(newdata,5)
+```
+
+* 先將年齡分成三個階層，15到20歲、20到60歲以及60歲以上。15到20歲為青年人，20到60歲為壯年人，60歲以上則為老人，以各年齡層來說，計算每個縣市的使用大眾運輸百分率。
+
+3.設計兩個function，一個為找到特定年齡搭乘大眾運輸的資料，另一個是計算特定年齡搭乘大眾運輸除以該年齡層之人數的比率
+
+```{r}
+#get certain part of data (15-20,20-60,60UP)
+certaindata<-function(data,expression){
+  certain<-data%>%
+    dplyr::select(sex,age,location,transportation)%>%
+    filter(expression&as.integer(newdata$transportation)>=14&as.integer(newdata$transportation)<=19)
+  certain
+}
+#get the rate about whether people commute by public transportation
+getrate<-function(data,data2,expression){
+  total<-data%>%
+    dplyr::select(sex,age,location,transportation)%>%
+    filter(expression)
+  h1<-count(total,location)
+  h2<-count(data2,location)
+  rate<-data.frame(h1[1],1-h2[2]/h1[2])
+  names(rate)<-c('location','rate')
+  rate
+}
+```
+
+4.套用function,算出各縣市的大眾搭乘率，並且畫成長條圖，方便觀察。
+
+* 第一張為「15-20歲年齡的民眾搭乘大眾運輸率」
+
+```{r}
+#filter people who ages between 15-20 and between 20-60 and above 60
+#age between 15 and 20
+expression1<-newdata$age=='15-18'|newdata$age=='18-20'
+youngadult<-certaindata(newdata,expression1)
+p1<-getrate(newdata,youngadult,expression1)
+ggplot(p1,aes(x=location,y=rate))+
+  geom_bar(stat = 'identity',fill='#00e677')+
+  geom_text(label=paste0(round(p1$rate,4)*100,"%"),size=3.2)+
+  coord_flip()
+
+```
+
+*第二張為「20-60歲年齡的民眾搭乘大眾運輸率」
+
+```{r}
+#age between 20 and 60
+expression2<-as.integer(newdata$age)>=3&as.integer(newdata$age)<=6
+adult<-certaindata(newdata,expression2)
+p2<-getrate(newdata,adult,expression2)
+ggplot(p2,aes(x=location,y=rate))+
+  geom_bar(stat = 'identity',fill='#56B4E9')+
+  geom_text(label=paste0(round(p2$rate,4)*100,"%"),size=3.2)+
+  coord_flip()
+```
+
+*第三張為「60歲以上年齡的民眾搭乘大眾運輸率」
+
+```{r}
+#age above 60
+expression3<-newdata$age=='60-65'|newdata$age=='above65'
+elder<-certaindata(newdata,expression3)
+p3<-getrate(newdata,elder,expression3)
+ggplot(p3,aes(x=location,y=rate))+
+  geom_bar(stat = 'identity',fill='#e6b800')+
+  geom_text(label=paste0(round(p3$rate,4)*100,"%"),size=3.2)+
+  coord_flip()
+
+```
+
+
+## 結論
+
+從三張長條圖可知兩件事情,第一件訊息是雙北地區的使用率仍比較高，至於其他縣市就稍微低了些，可見交通建設多寡還是有很大的影響；第二個訊息是青年人使用率最高，接下來是老人次之，最後才是壯年人，可能因為壯年人會因為工作需求，需要機動性比較高的機車或汽車來通勤，導致大眾運輸使用率較低，與其他年齡相比，有明顯較為低，如果政府想到提高民眾使用大眾運輸搭乘率，可以先針對這類群人做宣導。
+
+
