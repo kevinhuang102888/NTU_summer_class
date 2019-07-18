@@ -40,6 +40,8 @@
 
 ## Week 2
 
+1. 作業2: [transportation analysis](https://kevinhuang102888.github.io/kevinhuang/week2/HW2.html)
+
 ## Week 3
 
 
