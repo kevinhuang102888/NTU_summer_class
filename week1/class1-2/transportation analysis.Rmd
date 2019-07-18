@@ -53,14 +53,14 @@ survey2<-survey
 survey2$v12<-factor(survey2$v12,labels=c('male','female'))
 survey2$v13<-factor(survey2$v13,labels=c('15-18','18-20','20-30','30-40','40-50','50-60','60-65','above65'))
 survey2$v14<-factor(survey2$v14,labels=c('小學以下','國初中','高中','專科','大學','研究所','不知道'))
-region<-c('新北市','宜蘭縣','桃園縣','新竹縣','苗栗縣',
-          '台中市','彰化縣','南投縣','雲林縣','嘉義縣',
-          '台南縣','高雄縣','屏東縣','台東縣','花蓮縣',
-          '澎湖縣','基隆市','新竹市','台中市','嘉義市',
-          '台南市','台北市','高雄市','金門縣','連江縣')
 for (x in 1:25){
-  survey2$v2_1[(as.numeric(survey2$v2_1)%/%100)==x]<-region[x]
+  survey2$v2_1[(as.numeric(survey2$v2_1)%/%100)==x]<-x
 }
+survey2$v2_1<-factor(survey2$v2_1,labels=c('新北市','宜蘭縣','桃園縣','新竹縣','苗栗縣',
+          '原台中縣','彰化縣','南投縣','雲林縣','嘉義縣',
+          '原台南縣','原高雄縣','屏東縣','台東縣','花蓮縣',
+          '澎湖縣','基隆市','新竹市','台中市','嘉義市',
+          '台南市','台北市','高雄市','金門縣','連江縣'))
 survey2$v6<-factor(survey2$v6,labels=c('捷運','市區公車','公路客運','計程車(含共乘)','臺鐵','高鐵','渡輪','交通車','免費公車','國道客運','飛機',
 '步行','自行車','機車','自用小客車(含小客貨兩用車)',
 '自用大客車','自用小貨車','自用大貨車(含大客貨兩用車)',
@@ -75,7 +75,7 @@ survey2$v11_1<-factor(survey2$v11_1,labels=c('距離車站(包括各種公共運
 
 ```{r} 
 #select the data which i want
-newdata<-survey %>%
+newdata<-survey2%>%
   dplyr::select(age=v13,sex=v12,location=v2_1,transportation=v6,education=v14,job=v15)
 head(newdata)
 write.table(newdata,file="C:\\Users\\user\\Desktop\\test\\newdata.csv",sep=",",row.names=F, na = "NA")
@@ -93,7 +93,7 @@ Q1:先將年齡分成三個階層，15到20歲、20到60歲以及60歲以上。�
 certaindata<-function(data,expression){
   certain<-data%>%
     dplyr::select(sex,age,location,transportation)%>%
-    filter(expression&as.integer(newdata$transportation)>=14&as.integer(newdata$transportation)<=18)
+    filter(expression&as.integer(newdata$transportation)>=14&as.integer(newdata$transportation)<=19)
   certain
 }
 #get the rate about whether people commute by public transportation
@@ -116,8 +116,16 @@ getrate<-function(data,data2,expression){
 expression1<-newdata$age=='15-18'|newdata$age=='18-20'
 youngadult<-certaindata(newdata,expression1)
 p1<-getrate(newdata,youngadult,expression1)
+total<-newdata%>%
+    dplyr::select(sex,age,location,transportation)%>%
+    filter(expression1)
+h1<-count(total,location)
+h2<-count(youngadult,location)
+rate<-data.frame(h1[1],1-h2[2]/h1[2])
+names(rate)<-c('location','rate')
+rate
 
-
+levels(newdata$transportation)
 #age between 20 and 60
 expression2<-as.integer(newdata$age)>=3&as.integer(newdata$age)<=6
 adult<-certaindata(newdata,expression2)
