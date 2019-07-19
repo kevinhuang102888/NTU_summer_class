@@ -57,16 +57,14 @@ for (x in 1:25){
   survey2$v2_1[(as.numeric(survey2$v2_1)%/%100)==x]<-x
 }
 survey2$v2_1<-factor(survey2$v2_1,labels=c('新北市','宜蘭縣','桃園縣','新竹縣','苗栗縣',
-          '原台中縣','彰化縣','南投縣','雲林縣','嘉義縣',
-          '原台南縣','原高雄縣','屏東縣','台東縣','花蓮縣',
+          '台中市','彰化縣','南投縣','雲林縣','嘉義縣',
+          '台南市','高雄市','屏東縣','台東縣','花蓮縣',
           '澎湖縣','基隆市','新竹市','台中市','嘉義市',
           '台南市','台北市','高雄市','金門縣','連江縣'))
-survey2$v6<-factor(survey2$v6,labels=c('捷運','市區公車','公路客運','計程車(含共乘)','臺鐵','高鐵','渡輪','交通車','免費公車','國道客運','飛機',
-'步行','自行車','機車','自用小客車(含小客貨兩用車)',
-'自用大客車','自用小貨車','自用大貨車(含大客貨兩用車)',
-'不知道/拒答'))
-survey2$v11_1<-factor(survey2$v11_1,labels=c('距離車站(包括各種公共運具車站)太遠(含住家附近或目的地沒有車站)','公共運具本身開較慢','班次時間無法配合(含班次太少)',           '搭乘公共運具整體費用較貴','公共運具人潮壅擠，不舒適','不習慣或不知道如何搭乘公共運具','開車(或騎車)較方便','站牌標示不清',                                      '搭乘公共運具時，需換車多次太麻煩','外出之目的地很近，不需交通工具','公司(學校)有提供交通車或公務車','騎腳踏車可以健身',                                             '搭乘公共運具較不安全','候車或換車時間較長','開車(或騎車)較節省時間','不知道/拒答','未填答'),exclude = NULL)
+survey2$v6<-factor(survey2$v6,labels=c('捷運','市區公車','公路客運','計程車(含共乘)','臺鐵','高鐵','渡輪','交通車','免費公車','國道客運','飛機','步行','自行車','機車','自用小客車(含小客貨兩用車)','自用大客車','自用小貨車','自用大貨車(含大客貨兩用車)','不知道/拒答'))
+survey2$v11_1<-factor(survey2$v11_1,labels=c('距離車站(包括各種公共運具車站)太遠(含住家附近或目的地沒有車站)','公共運具本身開較慢','班次時間無法配合(含班次太少)','搭乘公共運具整體費用較貴','公共運具人潮壅擠，不舒適','不習慣或不知道如何搭乘公共運具','開車(或騎車)較方便','站牌標示不清','搭乘公共運具時，需換車多次太麻煩','外出之目的地很近，不需交通工具','公司(學校)有提供交通車或公務車','騎腳踏車可以健身','搭乘公共運具較不安全','候車或換車時間較長','開車(或騎車)較節省時間','不知道/拒答','未填答'),exclude = NULL)
 ```
+
 
 4.從資料取出「年齡」、「性別」、「居住地」、「平日主要使用的交通工具」、「教育」以及「工作類型」
 
@@ -74,68 +72,26 @@ survey2$v11_1<-factor(survey2$v11_1,labels=c('距離車站(包括各種公共運
 #select the data which i want
 newdata<-survey2%>%
   dplyr::select(age=v13,sex=v12,location=v2_1,transportation=v6,education=v14,job=v15)
-str(newdata)
 write.table(newdata,file="C:\\Users\\user\\Desktop\\newdata2.csv",sep=",",row.names=F)
+str(newdata)
 ```
 
 
 
-5.想要分析的問題
+5.算出台灣各縣市大眾運輸使用率，並存成CSV檔，方便後續的研究與討論。
 
-Q1:先將年齡分成三個階層，15到20歲、20到60歲以及60歲以上。以各年齡層來說，計算每個縣市的使用大眾運輸百分率。(附:不分年齡的檔案)
 
-設計兩個function，一個為找到特定年齡搭乘大眾運輸的資料，另一個是計算特定年齡搭乘大眾運輸除以該年齡層之人數的比率
-```{r} 
-#get certain part of data (15-20,20-60,60UP)
-certaindata<-function(data,expression){
-  certain<-data%>%
-    dplyr::select(sex,age,location,transportation)%>%
-    filter(expression&as.integer(newdata$transportation)>=14&as.integer(newdata$transportation)<=19)
-  certain
-}
-#get the rate about whether people commute by public transportation
-getrate<-function(data,data2,expression){
-  total<-data%>%
-    dplyr::select(sex,age,location,transportation)%>%
-    filter(expression)
-  h1<-count(total,location)
-  h2<-count(data2,location)
-  rate<-data.frame(h1[1],1-h2[2]/h1[2])
-  names(rate)<-c('location','rate')
-  rate
-}
-```
-
-套用function
 ```{r}
-#filter people who ages between 15-20 and between 20-60 and above 60
-#age between 15 and 20
-expression1<-newdata$age=='15-18'|newdata$age=='18-20'
-youngadult<-certaindata(newdata,expression1)
-p1<-getrate(newdata,youngadult,expression1)
-head(p1)
-
-
-#age between 20 and 60
-expression2<-as.integer(newdata$age)>=3&as.integer(newdata$age)<=6
-adult<-certaindata(newdata,expression2)
-p2<-getrate(newdata,adult,expression2)
-head(p2)
-
-#age above 60
-expression3<-newdata$age=='60-65'|newdata$age=='above65'
-elder<-certaindata(newdata,expression3)
-p3<-getrate(newdata,elder,expression3)
-head(p3)
-
 #不分年齡
 all<-count(newdata,location)
-all_trans<-count(filter(newdata,as.integer(newdata$transportation)>=14&as.integer(newdata$transportation)<=18),location)
-p4<-data.frame(all[1],1-all_trans[2]/all[2])
+all_trans<-count(filter(newdata,as.integer(newdata$transportation)
+                        %in% c(1,2,3,5,6,8,9,10)),location)
+p4<-data.frame(all[1],all_trans[2]/all[2])
 head(p4)
+write.table(p4,file="C:\\Users\\user\\Desktop\\alldata.csv",sep=",",row.names=F)
 ```
 
-Q2:「性別」是否會影響搭乘大眾運輸?
+額外討論:「性別」是否會影響搭乘大眾運輸?
 
 ```{r} 
 #determine the relationship between sex and transportation
