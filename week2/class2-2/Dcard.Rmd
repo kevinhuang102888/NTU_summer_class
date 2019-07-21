@@ -19,7 +19,7 @@ Dcard為目前台灣大學生常用的社群APP之一，有許多各式各樣的
 
 1.先將需要的library載入
 
-```{r}
+```{r warning=FALSE}
 # load the library
 #爬蟲使用
 library(httr)
@@ -104,6 +104,11 @@ head(Dcard)
 #set the cutter
 cutter <- worker('tag',write = "NOFILE")
 new_user_word(cutter,'成大','n')
+new_user_word(cutter,'韓國瑜','n')
+new_user_word(cutter,'韓粉','n')
+new_user_word(cutter,'蔡英文','n')
+new_user_word(cutter,'甲甲','n')
+new_user_word(cutter,'民進黨','n')
 ```
 
 7.套用function，將所有內文斷詞，並做次數累積
