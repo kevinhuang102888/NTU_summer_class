@@ -1,0 +1,147 @@
+---
+title: "transportation analysis2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 前序
+
+延續作業1的主題「民眾大眾交通搭乘分析」，已找到從原始資料萃取出我想要的資料(newdata.csv)，想透過這個資料觀察是否「年齡」對於「大眾運輸搭乘率」會不會有影響。
+
+另外因為資料是調查抽樣資料，抽樣人數各縣市不一，故以百分比的方式呈現「大眾運輸搭乘率」。
+
+## code
+
+1.匯入需要的library
+
+```{r}
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+```
+
+2.匯入前一份作業已收集的資料
+```{r}
+#load the data
+newdata2<-read.csv('C:\\Users\\user\\Desktop\\newdata2.csv',sep=",")
+head(newdata2,5)
+```
+
+* 先將年齡分成三個階層，15到20歲、20到60歲以及60歲以上。15到20歲為青年人，20到60歲為壯年人，60歲以上則為老人，以各年齡層來說，計算每個縣市的使用大眾運輸百分率。
+
+3.設計兩個function，一個為找到特定年齡搭乘大眾運輸的資料，另一個是計算特定年齡搭乘大眾運輸除以該年齡層之人數的比率
+
+```{r}
+#get certain part of data (15-20,20-60,60UP)
+levels(newdata2$transportation)
+certaindata<-function(data,expression){
+  certain<-data%>%
+    dplyr::select(sex,age,location,transportation)%>%
+    filter(expression&(as.integer(newdata2$transportation)%in%c(2,3,4,10,14,15,16,18)))
+  certain
+}
+#get the rate about whether people commute by public transportation
+getrate<-function(data,data2,expression){
+  total<-data%>%
+    dplyr::select(sex,age,location,transportation)%>%
+    filter(expression)
+  h1<-count(total,location)
+  h2<-count(data2,location)
+  rate<-data.frame(h1[1],h2[2]/h1[2])
+  names(rate)<-c('location','rate')
+  rate
+}
+```
+
+4.套用function,算出各縣市的大眾搭乘率，並且畫成長條圖，方便觀察。
+
+* 第一張為「15-20歲年齡的民眾搭乘大眾運輸率」
+
+```{r}
+#filter people who ages between 15-20 and between 20-60 and above 60
+#age between 15 and 20
+expression1<-newdata2$age=='15-18'|newdata2$age=='18-20'
+youngadult<-certaindata(newdata2,expression1)
+p1<-getrate(newdata2,youngadult,expression1)
+ggplot(p1,aes(x=location,y=rate))+
+  geom_bar(stat = 'identity',fill='#00e677')+
+  geom_text(label=paste0(round(p1$rate,4)*100,"%"),size=3.2)+
+  coord_flip()
+
+```
+
+*第二張為「20-60歲年齡的民眾搭乘大眾運輸率」
+
+```{r}
+#age between 20 and 60
+expression2<-as.integer(newdata2$age)>=3&as.integer(newdata2$age)<=6
+adult<-certaindata(newdata2,expression2)
+p2<-getrate(newdata2,adult,expression2)
+ggplot(p2,aes(x=location,y=rate))+
+  geom_bar(stat = 'identity',fill='#56B4E9')+
+  geom_text(label=paste0(round(p2$rate,4)*100,"%"),size=3.2)+
+  coord_flip()
+```
+
+*第三張為「60歲以上年齡的民眾搭乘大眾運輸率」
+
+```{r}
+#age above 60
+expression3<-newdata2$age=='60-65'|newdata2$age=='above65'
+elder<-certaindata(newdata2,expression3)
+p3<-getrate(newdata2,elder,expression3)
+ggplot(p3,aes(x=location,y=rate))+
+  geom_bar(stat = 'identity',fill='#e6b800')+
+  geom_text(label=paste0(round(p3$rate,4)*100,"%"),size=3.2)+
+  coord_flip()
+
+```
+
+5.全台灣各縣市大眾運輸使用率區域分配圖(不分年齡)
+
+```{r warning=FALSE}
+#set up the libraries which i need
+library(GISTools)
+library(rgdal)
+library(sp)
+library(dplyr)
+
+#get the data and map
+setwd('C:/Users/user/Desktop/test')
+TW <- readOGR(dsn = ".", layer = "COUNTY_MOI_1080617",use_iconv = TRUE, encoding="UTF-8") 
+map<-TW@data
+rate<-read.csv('C:\\Users\\user\\Desktop\\alldata.csv')
+
+#combine two data
+rate2<-rate
+rate2$location<-as.character(rate2$location)
+rate2$location<-c('New Taipei City','Yilan County','Taoyuan City','Hsinchu County',
+                  'Miaoli County','Taichung City','Changhua County','Nantou County',
+                  'Yunlin County','Chiayi County','Tainan City','Kaohsiung City',
+                  'Pingtung County','Taitung County','Hualien County','Penghu County',
+                  'Keelung City','Hsinchu City','Chiayi City','Taipei City',
+                  'Kinmen County','Lienchiang County')
+order_map <- map[ order(map$COUNTYENG), ]
+order_rate<-rate2[order(rate2$location),]
+order_map$avg_R<-order_rate$n
+order_map<-order_map[order(as.numeric(rownames(order_map))),,drop=FALSE]
+
+# plot
+par(mar = c(0,0,3,1)) 
+shades <- auto.shading(order_map$avg_R, cutter = quantileCuts,n =5, cols = brewer.pal(5, "Greens"))
+choropleth(TW, order_map$avg_R, shading=shades,cex=4) 
+title('台灣各縣市民眾搭乘大眾運輸使用率')
+choro.legend(125.4193,20.76209, shades,title='大眾運輸使用率(%)')
+
+```
+
+## 結論
+
+透過「年齡層」個別去分析，可以發現「年輕人(18-20歲)」以及「老人(60歲以上)」選擇搭乘大眾運輸的機率比較高，原因可能是因為「年輕人」多為學生，沒有屬於自己機車或汽車，老人為了安全緣故，他們才選擇搭乘大眾運輸，而相反的，壯年人(20-60歲)可以看出相對低很多，為了工作方便，多以機車或汽車為通勤、代步工具。
+
+從「台灣各縣市民眾搭乘大眾運輸使用率」這張圖中，可以發現「北部」縣市的民眾較常使用大眾運輸可能是因為大眾運輸系統較完善，而南部的民眾就不太習慣使用大眾運輸系統。
+
+
