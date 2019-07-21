@@ -15,6 +15,8 @@ Dcard為目前台灣大學生常用的社群APP之一，有許多各式各樣的
 
 這次的資料分析想要透過研究Dcard的成大版，從2019/07/19的最後一篇文章，回推取100篇Dcard文章來分析，從這些文章可以深入研究，討論成大版最常討論的詞彙或者什麼人比較常PO文等等問題，進而回復「成大是否為廢文大學?」。
 
+===
+
 1.先將需要的library載入
 
 ```{r}
@@ -79,7 +81,6 @@ myFUN<- function(str,term) {
 dcardurl <- 'https://www.dcard.tw/_api/forums/ncku/'
 mainurl <- paste0(dcardurl,'posts?popular=false&limit=100&before=231705029')
 resdata<- fromJSON(httr::content(GET(mainurl), 'text'))
-str(resdata)
 ```
 
 5.利用function求出內文跟留言內容，並併入resdata裡
@@ -119,7 +120,7 @@ st1<-st1[order(st1$freq,decreasing = TRUE),]
 內文的文字雲
 
 ```{r}
-wordcloud(words=st1$char,freq=st1$freq,scale = c(2.5,0.1), # 給定文字尺寸的區間（向量）
+wordcloud(words=st1$char,freq=st1$freq,scale = c(3,0.1), # 給定文字尺寸的區間（向量）
           random.order = F,# 關閉文字隨機顯示 按順序
           ordered.colors = F,#關閉配色順序
           rot.per = F,#關閉文字轉角度
@@ -129,5 +130,6 @@ wordcloud(words=st1$char,freq=st1$freq,scale = c(2.5,0.1), # 給定文字尺寸�
 ```
 
 
-9.
+9.結論
 
+從文字雲可以看出，在7/15-7/19這幾天中，主要都討論「選課、轉系資訊有關」，像是成績、學分、科系、書卷、條件或是機會，都是跟轉系有關，其中可以看出「法律系」、「電機系」以及「醫學系」討論熱烈，另外，還可以發現有一個小主題，談論到女生的部分蠻多的，像是女生、條件、高富帥、婊子或女人，看來成大學生在Dcard上蠻常討論女生的，不管是女生喜歡男生的樣子，或是形容女生，看來真的是肥宅學校XD(有點小小仇女)
