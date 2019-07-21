@@ -379,17 +379,17 @@ $(document).ready(function () {
 
 
 <div id="section" class="section level2">
-<h2>## 概論</h2>
+<h2>概論</h2>
 <p>為了環保節能與城市發展，政府積極推廣大眾運輸，大力興建捷運系統、重整公車系統或是規劃城市腳踏車系統，然而並非有了大眾運輸的出現，就能讓民眾從自駕車(汽車、機車)轉為大眾運輸，也應考慮到各個縣市的民眾對交通通勤的習慣、各縣市的大眾運輸建設或年齡層的不同等等因素，全方面的去討論，對於特定族群宣導，才能對症下藥。</p>
 </div>
 <div id="section-1" class="section level2">
-<h2>## 資料介紹</h2>
+<h2>資料介紹</h2>
 <p>這份資料來自交通部的「交通部統計處民眾日常使用運具狀況調查」，主要資料調查紀錄為各縣市民眾平常日使用運具之情形、民眾未使用公共運輸工具之原因、民眾使用公共運輸工具之滿意度及不滿意的原因。</p>
 <p>本次分析主要採用目前最新的調查版本(105年度)，並希望可以調查出「各縣市年齡層使用大眾運輸的使用率百分比」以及「性別是否影響搭乘大眾運輸」的討論</p>
 <p><a href="https://data.gov.tw/dataset/6248">資料來源</a></p>
 </div>
 <div id="code" class="section level2">
-<h2>## code介紹</h2>
+<h2>code介紹</h2>
 <p>1.先將需要的library匯入</p>
 <pre class="r"><code>#import &#39;dplyr&#39; and &#39;magrittr&#39;
 library(dplyr)</code></pre>
@@ -544,14 +544,30 @@ all&lt;-count(newdata,location)
 all_trans&lt;-count(filter(newdata,as.integer(newdata$transportation)
                         %in% c(1,2,3,5,6,8,9,10)),location)
 p4&lt;-data.frame(all[1],all_trans[2]/all[2])
-head(p4)</code></pre>
-<pre><code>##   location          n
-## 1   新北市 0.36397849
-## 2   宜蘭縣 0.09069631
-## 3   桃園縣 0.15243101
-## 4   新竹縣 0.11347518
-## 5   苗栗縣 0.11521739
-## 6   台中市 0.12512187</code></pre>
+p4</code></pre>
+<pre><code>##    location          n
+## 1    新北市 0.36397849
+## 2    宜蘭縣 0.09069631
+## 3    桃園縣 0.15243101
+## 4    新竹縣 0.11347518
+## 5    苗栗縣 0.11521739
+## 6    台中市 0.12512187
+## 7    彰化縣 0.04289373
+## 8    南投縣 0.09463199
+## 9    雲林縣 0.05659277
+## 10   嘉義縣 0.07117647
+## 11   台南市 0.06079855
+## 12   高雄市 0.09151515
+## 13   屏東縣 0.05666667
+## 14   台東縣 0.06491959
+## 15   花蓮縣 0.05966587
+## 16   澎湖縣 0.11642651
+## 17   基隆市 0.36408978
+## 18   新竹市 0.08015769
+## 19   嘉義市 0.02145329
+## 20   台北市 0.52824333
+## 21   金門縣 0.19000000
+## 22   連江縣 0.09610390</code></pre>
 <pre class="r"><code>write.table(p4,file=&quot;C:\\Users\\user\\Desktop\\alldata.csv&quot;,sep=&quot;,&quot;,row.names=F)</code></pre>
 <p>額外討論:「性別」是否會影響搭乘大眾運輸?</p>
 <pre class="r"><code>#determine the relationship between sex and transportation
