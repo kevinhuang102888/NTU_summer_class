@@ -6,16 +6,17 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-## 概論
----
+
+概論
+--
 
 
 
 為了環保節能與城市發展，政府積極推廣大眾運輸，大力興建捷運系統、重整公車系統或是規劃城市腳踏車系統，然而並非有了大眾運輸的出現，就能讓民眾從自駕車(汽車、機車)轉為大眾運輸，也應考慮到各個縣市的民眾對交通通勤的習慣、各縣市的大眾運輸建設或年齡層的不同等等因素，全方面的去討論，對於特定族群宣導，才能對症下藥。
 
 
-## 資料介紹
----
+資料介紹
+--
 
 這份資料來自交通部的「交通部統計處民眾日常使用運具狀況調查」，主要資料調查紀錄為各縣市民眾平常日使用運具之情形、民眾未使用公共運輸工具之原因、民眾使用公共運輸工具之滿意度及不滿意的原因。
 
@@ -25,8 +26,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 
-## code介紹
----
+code介紹
+--
 
 
 1.先將需要的library匯入
@@ -87,7 +88,7 @@ all<-count(newdata,location)
 all_trans<-count(filter(newdata,as.integer(newdata$transportation)
                         %in% c(1,2,3,5,6,8,9,10)),location)
 p4<-data.frame(all[1],all_trans[2]/all[2])
-head(p4)
+p4
 write.table(p4,file="C:\\Users\\user\\Desktop\\alldata.csv",sep=",",row.names=F)
 ```
 
