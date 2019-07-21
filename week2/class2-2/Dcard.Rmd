@@ -19,7 +19,7 @@ Dcard為目前台灣大學生常用的社群APP之一，有許多各式各樣的
 
 1.先將需要的library載入
 
-```{r warning=FALSE}
+```{r message=FALSE, warning=FALSE}
 # load the library
 #爬蟲使用
 library(httr)
@@ -93,14 +93,15 @@ Dcard<-data.frame(resdata$id,resdata$title,resdata$createdAt,
                   resdata$updatedAt,resdata$department,
                   resdata$commentCount,resdata$likeCount,
                   resdata$gender,content,comment)
-head(Dcard)
+head(Dcard$content)
+head(Dcard$comment)
 ```
 
 6.斷詞設定器，並取得文字的詞性，和加入新詞彙「成大」。
 
 **註**write = "NOFILE"用於防止讀檔的問題
 
-```{r}
+```{r message=FALSE}
 #set the cutter
 cutter <- worker('tag',write = "NOFILE")
 new_user_word(cutter,'成大','n')
