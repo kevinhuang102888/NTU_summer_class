@@ -7,9 +7,9 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-====
-簡介
-====
+
+# 簡介
+
 
 Dcard為目前台灣大學生常用的社群APP之一，有許多各式各樣的論壇版，其中成功大學又常被稱為「廢文大學」，喜歡PO一些無聊、沒意義的文章，又常戰系、戰學校，但事情真的是如此嗎?
 
@@ -79,7 +79,7 @@ myFUN<- function(str,term) {
 dcardurl <- 'https://www.dcard.tw/_api/forums/ncku/'
 mainurl <- paste0(dcardurl,'posts?popular=false&limit=100&before=231705029')
 resdata<- fromJSON(httr::content(GET(mainurl), 'text'))
-head(resdata)
+str(resdata)
 ```
 
 5.利用function求出內文跟留言內容，並併入resdata裡
@@ -105,17 +105,13 @@ cutter <- worker('tag',write = "NOFILE")
 new_user_word(cutter,'成大','n')
 ```
 
-7.套用function，將所有內文跟留言斷詞，並做次數累積
+7.套用function，將所有內文斷詞，並做次數累積
 
 ```{r}
 #cut the post
 txt1<-unlist(lapply(Dcard$content[1:100],myFUN,'n'))
 st1<-freq(txt1)
 st1<-st1[order(st1$freq,decreasing = TRUE),]
-#cut the comment
-txt2<-unlist(lapply(Dcard$comment[1:100],myFUN,'n'))
-st2<-freq(txt2)
-st2<-st2[order(st2$freq,decreasing = TRUE),]
 ```
 
 8.文字雲
@@ -132,14 +128,6 @@ wordcloud(words=st1$char,freq=st1$freq,scale = c(2.5,0.1), # 給定文字尺寸�
 )
 ```
 
-留言的文字雲
 
-```{r}
-wordcloud(words=st2$char,freq=st2$freq,
-          scale = c(2.5,0.1),random.order = F,
-          ordered.colors = F,rot.per = F,
-          min.freq = 5,colors = brewer.pal(8,"Dark2"))
-```
-
-
+9.
 
