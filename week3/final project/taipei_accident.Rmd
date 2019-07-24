@@ -1,0 +1,170 @@
+---
+title: "Taipei accident analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 概論
+
+我們在**臺北市資料大平台**裡，找到一份有趣的資料——「交通事故資訊」，於是想從這份資料，探究***什麼樣的人比較容易發生交通事故(who)***、***什麼的時段比較容易發生交通事故(when)***以及***什麼區域最容易發生交通事故(where)***等三個問題，目前這頁網站主要討論第三個問題，想以「區域」的角度看臺北市交通事故的問題，並試圖提供每個區域最容易出車禍的地點資訊，以方便駕駛、行人經過該路段可以更加小心謹慎一些。
+
+## 資料介紹
+
+此資料來自**臺北市資料大平台**，以「107年-臺北市A1及A2類交通事故明細.csv」此資料為主要分析，裡面的column有「發生年、發生月、發生日、發生時	發生分、處理別、區序、肇事地點、死亡人數、受傷人數、當事人序、車種、性別、年齡、受傷程度、天候、速限、道路型態以及事故位置」，而總資料數有50330筆。
+
+[臺北市交通事故](https://data.taipei/#/dataset/detail?id=2f238b4f-1b27-4085-93e9-d684ef0e2735)
+
+
+##code介紹
+
+part1
+
+1.匯入需要的library
+```{r cars, message=FALSE, warning=FALSE}
+# map
+library(GISTools)
+library(rgdal)
+library(sp)
+# data
+library(dplyr)
+# plot
+library(ggplot2)
+```
+
+
+2.讀取地圖檔(.shp)，並選擇臺北市的資料，特別取出Data部分研究
+
+```{r}
+TW <- readOGR(dsn = ".", layer = "TOWN_MOI_1080617", use_iconv = TRUE,encoding="UTF-8") # 台灣村里界 (面資料)
+TP <- subset(TW, COUNTYNAME== "臺北市") 
+taipei<-TP@data
+str(taipei)
+```
+
+3.讀取臺北市交通事故的資料，並重新命名column name
+
+```{r}
+accident<-read.csv("C:\\Users\\user\\Desktop\\TR.csv")
+names(accident)<-c('year','month','date','hour','minute','incident','district','location','death','injured','order','type','sex','age','degree','weather','rate','road','accident_type')
+accident$district<-gsub("[0-9]", "", accident$district)
+```
+
+4.算個臺北市各區域的交通事故數量，並將之合併於taipei裡
+
+```{r}
+freq<-count(accident,district)
+freq<-freq[order(freq$district),]
+taipei<-taipei[order(taipei$TOWNNAME),]
+taipei$freq<-freq$n
+```
+
+5.重新編排taipei的row number,使得對應原資料不會有錯誤
+
+***算出每平方公里交通事故量***
+
+```{r}
+taipei<-taipei[order(as.numeric(rownames(taipei))),,drop=FALSE]
+taipei$AREA <- poly.areas(TP)/ 10^6
+taipei$density<-taipei$freq/taipei$AREA
+```
+
+6.畫各縣市區域交通事故總計
+
+```{r}
+taipei2<-taipei[order(taipei$freq),]
+ggplot(taipei2,aes(x=reorder(TOWNNAME,-freq),y=freq))+geom_bar(stat='identity',color='skyblue',fill='steelblue')+
+  coord_flip()+ggtitle('107年臺北市各區域交通事故總數')+geom_text( aes(label =freq), color=('red'), size = 5)+
+  labs(y="交通事故總數(件)", x ="臺北市各區域(區名)" )
+```
+
+7.畫地圖1
+
+```{r}
+par(mar = c(0,0,3,1)) 
+shades <- auto.shading(taipei$freq, cutter = quantileCuts,n =5, cols = brewer.pal(5, "Reds"))
+choropleth(TP,taipei$freq, shading=shades,cex=10) 
+title('台北市各區域發生事故的數量')
+```
+
+8.畫地圖2
+
+```{r}
+par(mar = c(0,0,3,1)) 
+shades <- auto.shading(taipei$density, cutter = quantileCuts,n =5, cols = brewer.pal(5, "Reds"))
+choropleth(TP,taipei$density, shading=shades,cex=10) 
+title('台北市各區域每平方公里平均發生交通事故總數')
+```
+
+par2 從地址找關鍵路段
+
+1.將需要的library匯入
+
+```{r message=FALSE, warning=FALSE}
+library(jiebaR)
+library(jiebaRD)
+```
+
+2.設計function
+
+```{r}
+get_path<-function(alldistrict){
+  path<-paste0("C:\\Users\\user\\Desktop\\district\\",alldistrict,'.txt')
+  path
+}
+read_text<-function(path){
+  word<-readLines(path, encoding = "UTF-8")
+  word<-unlist(strsplit(word,','))
+  word<-gsub("１", "1", word)
+  word<-gsub("２", "2", word)
+  word<-gsub("３", "3", word)
+  word<-gsub("４", "4", word)
+  word
+}
+cutword<-function(road){
+  for(x in 1:length(road)){
+    new_user_word(cutter,road[x],'n')
+  }
+}
+add_dist<-function(district){
+  new_user_word(cutter,district,'n')
+}
+getword<-function(eachdistrict){
+  w<-filter(accident,district==eachdistrict)
+  countw<-cutter[as.character(w$location)]
+  countw<-gsub('口','',countw)
+  countw<-gsub('與','',countw)
+  countw<-gsub('號','',countw)
+  countw<-gsub('巷','',countw)
+  countw<-gsub('弄','',countw)
+  countw
+}
+```
+
+3.得到最後每個區域被切割過文字的地址
+
+```{r message=FALSE, warning=FALSE}
+allpath<-lapply(taipei$TOWNENG,get_path)
+road<-lapply(allpath, read_text)
+cutter<-worker()
+lapply(road,cutword)
+lapply(as.character(taipei$TOWNNAME),add_dist)
+all<-lapply(as.character(taipei$TOWNNAME), getword)
+```
+
+4.以「北投區」為例，畫出文字雲
+
+```{r}
+sortw<-freq(all[[12]])
+sortw=sortw[order(sortw$freq,decreasing=T),]
+library(wordcloud)
+wordcloud(words=sortw$char[1:12],freq=sortw$freq[1:12],scale = c(2,1.5), # 給定文字尺寸的區間（向量）
+          ordered.colors = T,#關閉配色順序
+          min.freq = 10,# 定義最小freq數字
+          colors = brewer.pal(12,"Paired")
+)
+```
+
+
