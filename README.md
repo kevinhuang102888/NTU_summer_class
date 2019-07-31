@@ -44,7 +44,7 @@
 
 	R for Data Science : https://r4ds.had.co.nz/
 	
-	實作：[Rmarkdown](https://kevinhuang102888.github.io/kevinhuang/week1/class1-1/demo.html)
+實作：[Rmarkdown](https://kevinhuang102888.github.io/kevinhuang/week1/class1-1/demo.html)
 
 4. 資料清洗與爬蟲練習
 
@@ -56,7 +56,7 @@
 
 	Dcard爬蟲 : http://chingru.me/code/2018-10-15-r-%E7%88%AC%E8%9F%B2%E4%BB%A5dcard%E7%82%BA%E4%BE%8B/
 
-	作業1 :[transportation analysis](https://kevinhuang102888.github.io/kevinhuang/week1/class1-2/transportation_analysis.html)
+作業1 :[transportation analysis](https://kevinhuang102888.github.io/kevinhuang/week1/class1-2/transportation_analysis.html)
 
 ## Week 2
 
@@ -76,7 +76,7 @@
 
 	助教示範 : https://miccwan.github.io/108summer/example/EDA/EDAExample.html
 
-	作業2: [transportation analysis](https://kevinhuang102888.github.io/kevinhuang/week2/class2-1/HW2.html)
+作業2: [transportation analysis](https://kevinhuang102888.github.io/kevinhuang/week2/class2-1/HW2.html)
 
 2. 文字探勘
 
@@ -106,7 +106,7 @@
 
 	熱點圖 : https://data-flair.training/blogs/python-heatmap-word-cloud/
 
-	作業3: [Dcard](https://kevinhuang102888.github.io/kevinhuang/week2/class2-2/Dcard.html)
+作業3: [Dcard](https://kevinhuang102888.github.io/kevinhuang/week2/class2-2/Dcard.html)
 
 ## Week 3
 
@@ -122,9 +122,9 @@
 
 2. 專題報告
 
-	final project:[台北交通分析](https://kevinhuang102888.github.io/kevinhuang/week3/final%20project/taipei_accident)
+final project:[台北交通分析](https://kevinhuang102888.github.io/kevinhuang/week3/final%20project/taipei_accident)
 
-	[專題的Powerpoint](https://drive.google.com/drive/folders/1e8Mc5JHs9BXaOnShZvtdLUD4_yQOdCQt)
+[專題的Powerpoint](https://drive.google.com/drive/folders/1e8Mc5JHs9BXaOnShZvtdLUD4_yQOdCQt)
 
 
 
