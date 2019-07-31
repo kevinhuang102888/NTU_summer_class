@@ -120,7 +120,7 @@
 
 	機器學習教學 : https://machinelearningmastery.com/machine-learning-in-r-step-by-step/
 
-2. 專題報告
+## 專題報告
 
 **final project**:[台北交通分析](https://kevinhuang102888.github.io/kevinhuang/week3/final%20project/taipei_accident)
 
