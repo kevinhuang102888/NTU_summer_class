@@ -44,7 +44,7 @@
 
 	R for Data Science : https://r4ds.had.co.nz/
 	
-**實作**：[Rmarkdown](https://kevinhuang102888.github.io/kevinhuang/week1/class1-1/demo.html)
+**實作**：[Rmarkdown](https://kevinhuang102888.github.io/NTU_summer_class/week1/class1-1/demo.html)
 
 4. 資料清洗與爬蟲練習
 
