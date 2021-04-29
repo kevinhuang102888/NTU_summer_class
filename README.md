@@ -124,7 +124,7 @@
 
 **final project**:[台北交通分析](https://kevinhuang102888.github.io/NTU_summer_class/week3/final%20project/taipei_accident)
 
-[專題的Powerpoint](https://drive.google.com/drive/folders/1e8Mc5JHs9BXaOnShZvtdLUD4_yQOdCQt)
+[專題的Powerpoint](https://github.com/kevinhuang102888/NTU_summer_class/blob/master/taipei_traffic.pdf)
 
 
 
